@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 217 33% 95%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 214 32% 94%;
+  --muted-foreground: 215 16% 42%;
+  --accent: 213 27% 92%;
+  --accent-foreground: 222 47% 11%;
+  --border: 214 32% 88%;
+  --input: 214 32% 88%;
+  --ring: 221 83% 53%;
+  --success: 154 64% 40%;
+  --success-foreground: 0 0% 100%;
+  --warning: 35 92% 50%;
+  --warning-foreground: 24 10% 10%;
+  --danger: 0 72% 51%;
+  --danger-foreground: 0 0% 100%;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 222 47% 8%;
+  --foreground: 210 40% 96%;
+  --card: 222 40% 11%;
+  --card-foreground: 210 40% 96%;
+  --popover: 222 40% 11%;
+  --popover-foreground: 210 40% 96%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 217 27% 17%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 217 27% 17%;
+  --muted-foreground: 215 20% 70%;
+  --accent: 217 27% 18%;
+  --accent-foreground: 210 40% 96%;
+  --border: 217 27% 20%;
+  --input: 217 27% 20%;
+  --ring: 217 91% 60%;
+  --success: 152 57% 48%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 60%;
+  --warning-foreground: 24 10% 10%;
+  --danger: 0 84% 65%;
+  --danger-foreground: 0 0% 100%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    font-family: "Plus Jakarta Sans", "Segoe UI Variable Text", "Segoe UI",
+      ui-sans-serif, system-ui, sans-serif;
+    background-image:
+      radial-gradient(circle at top, rgba(37, 99, 235, 0.1), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%);
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+}
