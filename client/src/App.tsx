@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { heroMetrics } from "@/data/mission-flow";
+import { login, register, type AuthFormPayload } from "@/lib/api";
 import { WorkspaceLayout } from "@/layouts/WorkspaceLayout";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
@@ -31,12 +32,12 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    if (role === "admin") {
+    if (role === "admin" && workspacePage === "overview") {
       setWorkspacePage("admin");
       return;
     }
 
-    if (workspacePage === "admin") {
+    if (role !== "admin" && workspacePage === "admin") {
       setWorkspacePage("overview");
       return;
     }
@@ -64,6 +65,21 @@ function App() {
     );
   };
 
+  const handleRegister = async (payload: AuthFormPayload) => {
+    const response = await register(payload);
+    window.localStorage.setItem("mission-flow-token", response.token);
+    openWorkspace(response.user.role);
+  };
+
+  const handleLogin = async (payload: AuthFormPayload) => {
+    const response = await login({
+      email: payload.email,
+      password: payload.password,
+    });
+    window.localStorage.setItem("mission-flow-token", response.token);
+    openWorkspace(response.user.role);
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0 bg-hero-grid" />
@@ -89,7 +105,7 @@ function App() {
           onAlternate={() => setScreen("register")}
           role={role}
           setRole={setRole}
-          onSubmit={() => openWorkspace(role)}
+          onSubmit={handleLogin}
           onBack={() => setScreen("landing")}
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword((current) => !current)}
@@ -108,7 +124,7 @@ function App() {
           onAlternate={() => setScreen("login")}
           role={role}
           setRole={setRole}
-          onSubmit={() => openWorkspace(role)}
+          onSubmit={handleRegister}
           onBack={() => setScreen("landing")}
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword((current) => !current)}

@@ -1,5 +1,11 @@
+import { useState } from "react";
 import { ArrowRight, CheckCircle2, ChevronRight } from "lucide-react";
-import { RolePill, ThemeToggleButton, Field, Select } from "@/components/mission-flow/primitives";
+import {
+  Field,
+  RolePill,
+  Select,
+  ThemeToggleButton,
+} from "@/components/mission-flow/primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import type { AuthFormPayload } from "@/lib/api";
 import type { Role, Theme } from "@/types/app";
 
 type AuthPageProps = {
@@ -21,7 +28,7 @@ type AuthPageProps = {
   onAlternate: () => void;
   role: Role;
   setRole: (role: Role) => void;
-  onSubmit: () => void;
+  onSubmit: (payload: AuthFormPayload) => Promise<void>;
   onBack: () => void;
   showPassword: boolean;
   onTogglePassword: () => void;
@@ -47,6 +54,34 @@ export function AuthPage({
   onThemeToggle,
   register = false,
 }: AuthPageProps) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit({
+        firstName,
+        lastName,
+        company,
+        email,
+        password,
+        role,
+      });
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Authentication failed.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="container flex min-h-screen items-center py-8">
       <div className="grid w-full overflow-hidden rounded-[2rem] border border-border/70 bg-card/85 shadow-2xl lg:grid-cols-[0.92fr_1.08fr]">
@@ -77,10 +112,7 @@ export function AuthPage({
                 "Review approvals with comments, budgets, and files in one place.",
                 "Keep admins aligned through analytics, exports, and archive controls.",
               ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 rounded-2xl bg-white/10 p-4"
-                >
+                <div key={item} className="flex items-start gap-3 rounded-2xl bg-white/10 p-4">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
                   <p className="text-sm leading-6">{item}</p>
                 </div>
@@ -106,26 +138,28 @@ export function AuthPage({
                 {register ? "Set up your account" : "Access your dashboard"}
               </CardTitle>
               <CardDescription>
-                Clean, secure authentication with role-aware routing and responsive form patterns.
+                Connected authentication using JWT, role selection, and a clean responsive form layout.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
               {register && (
                 <div className="grid gap-5 md:grid-cols-2">
                   <Field label="First name">
-                    <Input placeholder="Khaled" />
+                    <Input value={firstName} onChange={(event) => setFirstName(event.target.value)} placeholder="Khaled" />
                   </Field>
                   <Field label="Last name">
-                    <Input placeholder="Ben Salah" />
+                    <Input value={lastName} onChange={(event) => setLastName(event.target.value)} placeholder="Ben Salah" />
                   </Field>
                 </div>
               )}
               <Field label="Email address">
-                <Input placeholder="khaled@missionflow.io" type="email" />
+                <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="khaled@missionflow.io" type="email" />
               </Field>
               <Field label="Password">
                 <div className="relative">
                   <Input
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
                     className="pr-24"
@@ -141,7 +175,7 @@ export function AuthPage({
               </Field>
               {register && (
                 <Field label="Company name">
-                  <Input placeholder="Mission Flow Group" />
+                  <Input value={company} onChange={(event) => setCompany(event.target.value)} placeholder="Mission Flow Group" />
                 </Field>
               )}
               <Field label="Role selector">
@@ -158,8 +192,9 @@ export function AuthPage({
                 </label>
                 <button className="font-medium text-primary">Forgot password?</button>
               </div>
-              <Button className="w-full" size="lg" onClick={onSubmit}>
-                {actionLabel}
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+              <Button className="w-full" size="lg" onClick={handleSubmit} disabled={isSubmitting}>
+                {isSubmitting ? "Please wait..." : actionLabel}
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <p className="text-center text-sm text-muted-foreground">

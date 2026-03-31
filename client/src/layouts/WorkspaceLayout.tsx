@@ -58,10 +58,10 @@ export function WorkspaceLayout({
   const navItems = sidebarItems[role];
   const titles: Record<WorkspacePage, string> = {
     overview: "Dashboard",
-    "new-mission": "New Mission",
+    "new-mission": role === "admin" ? "HR Forms" : "Mission Forms",
     history: role === "admin" ? "Mission Management" : "Mission History",
     approval: "Mission Validation",
-    settings: "Profile & Settings",
+    settings: role === "admin" ? "System Settings" : "Profile & Settings",
     admin: "Admin Dashboard",
   };
 

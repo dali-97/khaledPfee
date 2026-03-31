@@ -92,7 +92,7 @@ export const kpis: Record<"employee" | "admin", KpiMetric[]> = {
 export const sidebarItems: Record<Role, SidebarItem[]> = {
   employee: [
     { key: "overview", label: "Dashboard", icon: LayoutDashboard },
-    { key: "new-mission", label: "New Mission", icon: FileText },
+    { key: "new-mission", label: "Mission Forms", icon: FileText },
     { key: "history", label: "Mission History", icon: CalendarRange },
     { key: "settings", label: "Profile & Settings", icon: Settings },
   ],
@@ -104,6 +104,7 @@ export const sidebarItems: Record<Role, SidebarItem[]> = {
   ],
   admin: [
     { key: "admin", label: "Admin Dashboard", icon: LayoutDashboard },
+    { key: "new-mission", label: "HR Forms", icon: FileText },
     { key: "history", label: "Mission Management", icon: CalendarRange },
     { key: "approval", label: "Approvals", icon: ShieldCheck },
     { key: "settings", label: "System Settings", icon: Settings },
