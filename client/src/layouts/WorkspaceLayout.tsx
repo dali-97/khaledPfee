@@ -9,7 +9,6 @@ import {
   Search,
   Settings,
   UserRound,
-  Users,
   X,
 } from "lucide-react";
 import { sidebarItems } from "@/data/mission-flow";
@@ -24,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ThemeToggleButton } from "@/components/mission-flow/primitives";
 import { cn } from "@/lib/utils";
-import type { AppScreen, Role, SidebarItem, Theme, WorkspacePage } from "@/types/app";
+import type { AuthUser, Role, SidebarItem, Theme, WorkspacePage } from "@/types/app";
 
 type WorkspaceLayoutProps = {
   role: Role;
@@ -36,8 +35,8 @@ type WorkspaceLayoutProps = {
   sidebarOpen: boolean;
   onSidebarToggle: () => void;
   onSidebarClose: () => void;
-  setRole: (role: Role) => void;
-  setScreen: (screen: AppScreen) => void;
+  onSignOut: () => void;
+  currentUser: AuthUser | null;
   children: ReactNode;
 };
 
@@ -51,8 +50,8 @@ export function WorkspaceLayout({
   sidebarOpen,
   onSidebarToggle,
   onSidebarClose,
-  setRole,
-  setScreen,
+  onSignOut,
+  currentUser,
   children,
 }: WorkspaceLayoutProps) {
   const navItems = sidebarItems[role];
@@ -141,8 +140,12 @@ export function WorkspaceLayout({
                     <UserRound className="h-4 w-4" />
                   </div>
                   <div className="hidden sm:block">
-                    <p className="text-sm font-medium">Khaled Ben Salah</p>
-                    <p className="text-xs text-muted-foreground capitalize">{role}</p>
+                    <p className="text-sm font-medium">
+                      {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Mission User"}
+                    </p>
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {currentUser?.role ?? role}
+                    </p>
                   </div>
                 </button>
                 <div className="invisible absolute right-0 top-[calc(100%+0.75rem)] z-20 w-64 rounded-2xl border border-border/70 bg-popover p-2 opacity-0 shadow-xl transition-all group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
@@ -154,23 +157,8 @@ export function WorkspaceLayout({
                     Profile settings
                   </button>
                   <button
-                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-accent"
-                    onClick={() =>
-                      setRole(
-                        role === "employee"
-                          ? "manager"
-                          : role === "manager"
-                            ? "admin"
-                            : "employee",
-                      )
-                    }
-                  >
-                    <Users className="h-4 w-4" />
-                    Cycle preview role
-                  </button>
-                  <button
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-danger hover:bg-danger/10"
-                    onClick={() => setScreen("login")}
+                    onClick={onSignOut}
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { heroMetrics } from "@/data/mission-flow";
-import { login, register, type AuthFormPayload } from "@/lib/api";
+import { getCurrentUser, login, register, type AuthFormPayload } from "@/lib/api";
+import { clearSession, getSessionToken, getSessionUser, saveSession } from "@/lib/session";
 import { WorkspaceLayout } from "@/layouts/WorkspaceLayout";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
@@ -10,26 +11,54 @@ import { MissionHistoryPage } from "@/pages/MissionHistoryPage";
 import { MissionSubmissionPage } from "@/pages/MissionSubmissionPage";
 import { ProfileSettingsPage } from "@/pages/ProfileSettingsPage";
 import { UserDashboardPage } from "@/pages/UserDashboardPage";
-import type { AppScreen, Role, Theme, WorkspacePage } from "@/types/app";
+import type { AppScreen, AuthUser, Role, Theme, WorkspacePage } from "@/types/app";
 
 function App() {
+  const initialUser = getSessionUser();
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = window.localStorage.getItem("mission-flow-theme");
     return savedTheme === "dark" ? "dark" : "light";
   });
   const [screen, setScreen] = useState<AppScreen>("landing");
-  const [role, setRole] = useState<Role>("employee");
+  const [role, setRole] = useState<Role>(initialUser?.role ?? "employee");
   const [workspacePage, setWorkspacePage] = useState<WorkspacePage>("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [digestEnabled, setDigestEnabled] = useState(false);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(initialUser);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     window.localStorage.setItem("mission-flow-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const token = getSessionToken();
+    const user = getSessionUser();
+
+    if (!token || !user) {
+      clearSession();
+      setCurrentUser(null);
+      return;
+    }
+
+    setCurrentUser(user);
+    setRole(user.role);
+
+    void getCurrentUser()
+      .then((response) => {
+        saveSession(token, response.user);
+        setCurrentUser(response.user);
+        setRole(response.user.role);
+      })
+      .catch(() => {
+        clearSession();
+        setCurrentUser(null);
+        setRole("employee");
+      });
+  }, []);
 
   useEffect(() => {
     if (role === "admin" && workspacePage === "overview") {
@@ -67,7 +96,8 @@ function App() {
 
   const handleRegister = async (payload: AuthFormPayload) => {
     const response = await register(payload);
-    window.localStorage.setItem("mission-flow-token", response.token);
+    saveSession(response.token, response.user);
+    setCurrentUser(response.user);
     openWorkspace(response.user.role);
   };
 
@@ -76,8 +106,27 @@ function App() {
       email: payload.email,
       password: payload.password,
     });
-    window.localStorage.setItem("mission-flow-token", response.token);
+    saveSession(response.token, response.user);
+    setCurrentUser(response.user);
     openWorkspace(response.user.role);
+  };
+
+  const handleGetStarted = () => {
+    if (currentUser) {
+      openWorkspace(currentUser.role);
+      return;
+    }
+
+    setScreen("login");
+  };
+
+  const handleSignOut = () => {
+    clearSession();
+    setCurrentUser(null);
+    setRole("employee");
+    setScreen("landing");
+    setWorkspacePage("overview");
+    setSidebarOpen(false);
   };
 
   return (
@@ -89,9 +138,10 @@ function App() {
           theme={theme}
           onThemeToggle={() => setTheme(theme === "light" ? "dark" : "light")}
           onNavigate={setScreen}
-          onGetStarted={() => openWorkspace("employee")}
+          onGetStarted={handleGetStarted}
           onLogin={() => setScreen("login")}
           metrics={heroMetrics}
+          isAuthenticated={Boolean(currentUser)}
         />
       )}
 
@@ -151,8 +201,8 @@ function App() {
           sidebarOpen={sidebarOpen}
           onSidebarToggle={() => setSidebarOpen((open) => !open)}
           onSidebarClose={() => setSidebarOpen(false)}
-          setRole={setRole}
-          setScreen={setScreen}
+          onSignOut={handleSignOut}
+          currentUser={currentUser}
         >
           {role === "admin" && workspacePage === "admin" ? (
             <AdminDashboardPage onOpenHistory={() => setWorkspacePage("history")} />

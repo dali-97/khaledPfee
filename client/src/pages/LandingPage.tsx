@@ -32,6 +32,7 @@ export function LandingPage({
   onGetStarted,
   onLogin,
   metrics,
+  isAuthenticated,
 }: {
   theme: Theme;
   onThemeToggle: () => void;
@@ -39,6 +40,7 @@ export function LandingPage({
   onGetStarted: () => void;
   onLogin: () => void;
   metrics: Array<{ label: string; value: string }>;
+  isAuthenticated: boolean;
 }) {
   return (
     <div className="relative">
@@ -63,21 +65,27 @@ export function LandingPage({
             <a href="#about" className="transition hover:text-foreground">
               About Us
             </a>
-            <button onClick={onLogin} className="transition hover:text-foreground">
-              Login
-            </button>
-            <button
-              onClick={() => onNavigate("register")}
-              className="transition hover:text-foreground"
-            >
-              Register
-            </button>
+            {!isAuthenticated ? (
+              <>
+                <button onClick={onLogin} className="transition hover:text-foreground">
+                  Login
+                </button>
+                <button
+                  onClick={() => onNavigate("register")}
+                  className="transition hover:text-foreground"
+                >
+                  Register
+                </button>
+              </>
+            ) : null}
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggleButton theme={theme} onClick={onThemeToggle} />
-            <Button variant="outline" className="hidden md:inline-flex" onClick={onLogin}>
-              Login
-            </Button>
+            {!isAuthenticated ? (
+              <Button variant="outline" className="hidden md:inline-flex" onClick={onLogin}>
+                Login
+              </Button>
+            ) : null}
             <Button onClick={onGetStarted}>Get Started</Button>
           </div>
         </div>
@@ -90,12 +98,14 @@ export function LandingPage({
               {item}
             </span>
           ))}
-          <button
-            onClick={onLogin}
-            className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-sm text-muted-foreground"
-          >
-            Login
-          </button>
+          {!isAuthenticated ? (
+            <button
+              onClick={onLogin}
+              className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-sm text-muted-foreground"
+            >
+              Login
+            </button>
+          ) : null}
         </div>
       </header>
       <main>
@@ -121,12 +131,14 @@ export function LandingPage({
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button size="lg" onClick={onGetStarted}>
-                Get Started
+                {isAuthenticated ? "Open Dashboard" : "Get Started"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" onClick={onLogin}>
-                Login
-              </Button>
+              {!isAuthenticated ? (
+                <Button size="lg" variant="outline" onClick={onLogin}>
+                  Login
+                </Button>
+              ) : null}
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               {metrics.map((metric) => (
@@ -333,7 +345,7 @@ export function LandingPage({
             <span>Home</span>
             <span>Missions</span>
             <span>About Us</span>
-            <span>Login / Register</span>
+            {!isAuthenticated ? <span>Login / Register</span> : null}
           </div>
         </div>
       </footer>

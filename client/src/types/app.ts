@@ -35,3 +35,11 @@ export type SidebarItem = {
   label: string;
   icon: LucideIcon;
 };
+
+export type AuthUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: Role;
+};
