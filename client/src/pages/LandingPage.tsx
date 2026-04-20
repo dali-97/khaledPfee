@@ -1,11 +1,13 @@
+import { useRef, useState } from "react";
 import {
   ArrowRight,
   Download,
   FileText,
-  Plane,
+  Menu,
   ShieldCheck,
   Sparkles,
   WalletCards,
+  X,
 } from "lucide-react";
 import { benefitCards } from "@/data/mission-flow";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +27,52 @@ import {
 } from "@/components/mission-flow/primitives";
 import type { AppScreen, Theme } from "@/types/app";
 
+function SpotlightCard({
+  children,
+  color = "99, 102, 241",
+  className = "",
+}: {
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0, show: false });
+
+  return (
+    <div
+      ref={ref}
+      className={`group relative overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-transform duration-300 hover:-translate-y-1 ${className}`}
+      onMouseMove={(e) => {
+        const r = ref.current!.getBoundingClientRect();
+        setPos({ x: e.clientX - r.left, y: e.clientY - r.top, show: true });
+      }}
+      onMouseLeave={() => setPos((p) => ({ ...p, show: false }))}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 hidden rounded-[inherit] transition-opacity duration-300 dark:block"
+        style={{
+          opacity: pos.show ? 1 : 0,
+          background: `radial-gradient(300px circle at ${pos.x}px ${pos.y}px, rgba(${color}, 0.12), transparent 60%)`,
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-[-1px] hidden rounded-[inherit] transition-opacity duration-300 dark:block"
+        style={{
+          opacity: pos.show ? 1 : 0,
+          padding: "1px",
+          background: `radial-gradient(200px circle at ${pos.x}px ${pos.y}px, rgba(${color}, 0.7), transparent 60%)`,
+          WebkitMask:
+            "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
+        }}
+      />
+      {children}
+    </div>
+  );
+}
+
 export function LandingPage({
   theme,
   onThemeToggle,
@@ -42,17 +90,17 @@ export function LandingPage({
   metrics: Array<{ label: string; value: string }>;
   isAuthenticated: boolean;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="relative">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/75 backdrop-blur-xl">
         <div className="container flex h-20 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-glow">
-              <Plane className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-lg font-semibold">Mission Flow</p>
-              <p className="text-sm text-muted-foreground">Corporate mission operations</p>
+            <div className="flex items-center leading-none">
+              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">SEBN</span>
+              <span className="mx-0.5 mb-0.5 inline-block h-4 w-1.5 translate-y-0.5 rounded-sm bg-gray-400" />
+              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">TN</span>
             </div>
           </div>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
@@ -65,7 +113,7 @@ export function LandingPage({
             <a href="#about" className="transition hover:text-foreground">
               About Us
             </a>
-            {!isAuthenticated ? (
+            {/* {!isAuthenticated ? (
               <>
                 <button onClick={onLogin} className="transition hover:text-foreground">
                   Login
@@ -77,7 +125,7 @@ export function LandingPage({
                   Register
                 </button>
               </>
-            ) : null}
+            ) : null} */}
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggleButton theme={theme} onClick={onThemeToggle} />
@@ -86,27 +134,48 @@ export function LandingPage({
                 Login
               </Button>
             ) : null}
-            <Button onClick={onGetStarted}>Get Started</Button>
+            <Button className="hidden md:inline-flex" onClick={onGetStarted}>Get Started</Button>
+            <button
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card text-foreground transition hover:bg-accent md:hidden"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
           </div>
         </div>
-        <div className="container flex gap-2 overflow-x-auto pb-4 md:hidden">
-          {["Home", "Missions", "About Us"].map((item) => (
-            <span
-              key={item}
-              className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-sm text-muted-foreground"
-            >
-              {item}
-            </span>
-          ))}
-          {!isAuthenticated ? (
-            <button
-              onClick={onLogin}
-              className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-sm text-muted-foreground"
-            >
-              Login
-            </button>
-          ) : null}
-        </div>
+
+        {/* Mobile burger menu */}
+        {menuOpen && (
+          <div className="border-t border-border/60 bg-background/95 backdrop-blur-xl md:hidden">
+            <nav className="container flex flex-col py-4">
+              {[
+                { label: "Home", href: "#home" },
+                { label: "Missions", href: "#missions" },
+                { label: "About Us", href: "#about" },
+              ].map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <div className="mt-3 flex flex-col gap-2 border-t border-border/60 pt-3">
+                {!isAuthenticated ? (
+                  <Button variant="outline" className="w-full" onClick={() => { setMenuOpen(false); onLogin(); }}>
+                    Login
+                  </Button>
+                ) : null}
+                <Button className="w-full" onClick={() => { setMenuOpen(false); onGetStarted(); }}>
+                  Get Started
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
       <main>
         <section
@@ -219,7 +288,7 @@ export function LandingPage({
                 icon: Download,
               },
             ].map((feature) => (
-              <Card key={feature.title} className="group">
+              <SpotlightCard key={feature.title}>
                 <CardHeader className="space-y-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                     <feature.icon className="h-5 w-5" />
@@ -229,7 +298,7 @@ export function LandingPage({
                     <CardDescription>{feature.description}</CardDescription>
                   </div>
                 </CardHeader>
-              </Card>
+              </SpotlightCard>
             ))}
           </div>
         </section>

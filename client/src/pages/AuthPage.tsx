@@ -145,15 +145,15 @@ export function AuthPage({
               {register && (
                 <div className="grid gap-5 md:grid-cols-2">
                   <Field label="First name">
-                    <Input value={firstName} onChange={(event) => setFirstName(event.target.value)} placeholder="Khaled" />
+                    <Input value={firstName} onChange={(event) => setFirstName(event.target.value)} placeholder="Enter your first name" />
                   </Field>
                   <Field label="Last name">
-                    <Input value={lastName} onChange={(event) => setLastName(event.target.value)} placeholder="Ben Salah" />
+                    <Input value={lastName} onChange={(event) => setLastName(event.target.value)} placeholder="Enter your last name" />
                   </Field>
                 </div>
               )}
               <Field label="Email address">
-                <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="khaled@missionflow.io" type="email" />
+                <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" />
               </Field>
               <Field label="Password">
                 <div className="relative">
