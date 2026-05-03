@@ -97,16 +97,19 @@ export function ThemeToggleButton({
 export function Field({
   label,
   className,
+  error,
   children,
 }: {
   label: string;
   className?: string;
+  error?: string;
   children: ReactNode;
 }) {
   return (
     <label className={cn("grid gap-2 text-sm font-medium", className)}>
       <span>{label}</span>
       {children}
+      {error && <span className="text-xs text-danger">{error}</span>}
     </label>
   );
 }

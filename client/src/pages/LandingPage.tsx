@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Download,
@@ -9,7 +10,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { benefitCards } from "@/data/mission-flow";
+import { benefitCards, heroMetrics } from "@/data/mission-flow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +26,8 @@ import {
   SectionHeading,
   ThemeToggleButton,
 } from "@/components/mission-flow/primitives";
-import type { AppScreen, Theme } from "@/types/app";
+import { useAuthStore } from "@/store/authStore";
+import { useUIStore } from "@/store/uiStore";
 
 function SpotlightCard({
   children,
@@ -73,24 +75,16 @@ function SpotlightCard({
   );
 }
 
-export function LandingPage({
-  theme,
-  onThemeToggle,
-  onNavigate,
-  onGetStarted,
-  onLogin,
-  metrics,
-  isAuthenticated,
-}: {
-  theme: Theme;
-  onThemeToggle: () => void;
-  onNavigate: (screen: AppScreen) => void;
-  onGetStarted: () => void;
-  onLogin: () => void;
-  metrics: Array<{ label: string; value: string }>;
-  isAuthenticated: boolean;
-}) {
+export function LandingPage() {
+  const navigate = useNavigate();
+  const { theme, toggleTheme } = useUIStore();
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = Boolean(user);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleGetStarted = () => {
+    navigate(isAuthenticated ? "/workspace" : "/login");
+  };
 
   return (
     <div className="relative">
@@ -98,9 +92,13 @@ export function LandingPage({
         <div className="container flex h-20 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center leading-none">
-              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">SEBN</span>
+              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">
+                SEBN
+              </span>
               <span className="mx-0.5 mb-0.5 inline-block h-4 w-1.5 translate-y-0.5 rounded-sm bg-gray-400" />
-              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">TN</span>
+              <span className="text-2xl font-extrabold tracking-tight text-[#3b3598]">
+                TN
+              </span>
             </div>
           </div>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
@@ -113,28 +111,21 @@ export function LandingPage({
             <a href="#about" className="transition hover:text-foreground">
               About Us
             </a>
-            {/* {!isAuthenticated ? (
-              <>
-                <button onClick={onLogin} className="transition hover:text-foreground">
-                  Login
-                </button>
-                <button
-                  onClick={() => onNavigate("register")}
-                  className="transition hover:text-foreground"
-                >
-                  Register
-                </button>
-              </>
-            ) : null} */}
           </nav>
           <div className="flex items-center gap-2">
-            <ThemeToggleButton theme={theme} onClick={onThemeToggle} />
+            <ThemeToggleButton theme={theme} onClick={toggleTheme} />
             {!isAuthenticated ? (
-              <Button variant="outline" className="hidden md:inline-flex" onClick={onLogin}>
+              <Button
+                variant="outline"
+                className="hidden md:inline-flex"
+                onClick={() => navigate("/login")}
+              >
                 Login
               </Button>
             ) : null}
-            <Button className="hidden md:inline-flex" onClick={onGetStarted}>Get Started</Button>
+            <Button className="hidden md:inline-flex" onClick={handleGetStarted}>
+              Get Started
+            </Button>
             <button
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card text-foreground transition hover:bg-accent md:hidden"
               onClick={() => setMenuOpen((o) => !o)}
@@ -145,7 +136,6 @@ export function LandingPage({
           </div>
         </div>
 
-        {/* Mobile burger menu */}
         {menuOpen && (
           <div className="border-t border-border/60 bg-background/95 backdrop-blur-xl md:hidden">
             <nav className="container flex flex-col py-4">
@@ -165,11 +155,24 @@ export function LandingPage({
               ))}
               <div className="mt-3 flex flex-col gap-2 border-t border-border/60 pt-3">
                 {!isAuthenticated ? (
-                  <Button variant="outline" className="w-full" onClick={() => { setMenuOpen(false); onLogin(); }}>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/login");
+                    }}
+                  >
                     Login
                   </Button>
                 ) : null}
-                <Button className="w-full" onClick={() => { setMenuOpen(false); onGetStarted(); }}>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    handleGetStarted();
+                  }}
+                >
                   Get Started
                 </Button>
               </div>
@@ -177,6 +180,7 @@ export function LandingPage({
           </div>
         )}
       </header>
+
       <main>
         <section
           id="home"
@@ -189,28 +193,28 @@ export function LandingPage({
             </Badge>
             <div className="space-y-5">
               <h1 className="max-w-2xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-                Manage every business mission with clarity, speed, and executive-level
-                control.
+                Manage every business mission with clarity, speed, and
+                executive-level control.
               </h1>
               <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-                Mission Flow centralizes mission requests, approvals, travel planning, and
-                expense oversight in one elegant SaaS workspace built for modern
-                organizations.
+                Mission Flow centralizes mission requests, approvals, travel
+                planning, and expense oversight in one elegant SaaS workspace
+                built for modern organizations.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" onClick={onGetStarted}>
+              <Button size="lg" onClick={handleGetStarted}>
                 {isAuthenticated ? "Open Dashboard" : "Get Started"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
               {!isAuthenticated ? (
-                <Button size="lg" variant="outline" onClick={onLogin}>
+                <Button size="lg" variant="outline" onClick={() => navigate("/login")}>
                   Login
                 </Button>
               ) : null}
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
-              {metrics.map((metric) => (
+              {heroMetrics.map((metric) => (
                 <Card key={metric.label} className="border-primary/10 bg-card/80">
                   <CardContent className="p-5">
                     <p className="text-2xl font-semibold">{metric.value}</p>
@@ -220,6 +224,7 @@ export function LandingPage({
               ))}
             </div>
           </div>
+
           <Card className="overflow-hidden border-primary/10 bg-card/85 shadow-glow">
             <CardContent className="space-y-6 p-0">
               <div className="flex items-center justify-between border-b border-border/60 px-6 py-5">
@@ -240,7 +245,9 @@ export function LandingPage({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-muted-foreground">Current trip</p>
-                      <p className="text-base font-semibold">Client onboarding visit - Berlin</p>
+                      <p className="text-base font-semibold">
+                        Client onboarding visit - Berlin
+                      </p>
                     </div>
                     <Badge>In Progress</Badge>
                   </div>
@@ -314,8 +321,8 @@ export function LandingPage({
                   A polished flow from request to reimbursement.
                 </CardTitle>
                 <CardDescription>
-                  Mission Flow keeps the full lifecycle visible, so nobody loses context
-                  between submission, validation, and reporting.
+                  Mission Flow keeps the full lifecycle visible, so nobody loses
+                  context between submission, validation, and reporting.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -379,7 +386,8 @@ export function LandingPage({
               <CardHeader>
                 <CardTitle>Trustworthy design</CardTitle>
                 <CardDescription>
-                  Readable contrast, structured forms, and status clarity for every mission stage.
+                  Readable contrast, structured forms, and status clarity for
+                  every mission stage.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -387,7 +395,8 @@ export function LandingPage({
               <CardHeader>
                 <CardTitle>Enterprise-ready layout</CardTitle>
                 <CardDescription>
-                  Collapsible sidebars, analytics panels, and full role-based control centers.
+                  Collapsible sidebars, analytics panels, and full role-based
+                  control centers.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -395,13 +404,15 @@ export function LandingPage({
               <CardHeader>
                 <CardTitle>Responsive everywhere</CardTitle>
                 <CardDescription>
-                  Landing, auth, dashboards, and forms adapt smoothly across mobile, tablet, and desktop.
+                  Landing, auth, dashboards, and forms adapt smoothly across
+                  mobile, tablet, and desktop.
                 </CardDescription>
               </CardHeader>
             </Card>
           </div>
         </section>
       </main>
+
       <footer className="border-t border-border/60 bg-card/60">
         <div className="container flex flex-col gap-6 py-8 md:flex-row md:items-center md:justify-between">
           <div>

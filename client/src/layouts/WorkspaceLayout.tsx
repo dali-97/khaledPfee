@@ -1,6 +1,9 @@
-import type { ReactNode } from "react";
+import { useRef, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Bell,
+  Check,
+  CheckCheck,
   ChevronRight,
   Globe2,
   LogOut,
@@ -23,45 +26,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { ThemeToggleButton } from "@/components/mission-flow/primitives";
 import { cn } from "@/lib/utils";
-import type { AuthUser, Role, SidebarItem, Theme, WorkspacePage } from "@/types/app";
+import { useAuthStore } from "@/store/authStore";
+import { useNotificationStore } from "@/store/notificationStore";
+import { useUIStore } from "@/store/uiStore";
+import type { Role, SidebarItem, WorkspacePage } from "@/types/app";
 
-type WorkspaceLayoutProps = {
-  role: Role;
-  page: WorkspacePage;
-  onPageChange: (page: WorkspacePage) => void;
-  onBackToLanding: () => void;
-  theme: Theme;
-  onThemeToggle: () => void;
-  sidebarOpen: boolean;
-  onSidebarToggle: () => void;
-  onSidebarClose: () => void;
-  onSignOut: () => void;
-  currentUser: AuthUser | null;
-  children: ReactNode;
+const pageTitles: Record<WorkspacePage, (isAdmin: boolean) => string> = {
+  overview: () => "Dashboard",
+  "new-mission": (isAdmin) => (isAdmin ? "HR Forms" : "Mission Forms"),
+  history: (isAdmin) => (isAdmin ? "Mission Management" : "Mission History"),
+  approval: () => "Mission Validation",
+  settings: (isAdmin) => (isAdmin ? "System Settings" : "Profile & Settings"),
+  admin: () => "Admin Dashboard",
 };
 
-export function WorkspaceLayout({
-  role,
-  page,
-  onPageChange,
-  onBackToLanding,
-  theme,
-  onThemeToggle,
-  sidebarOpen,
-  onSidebarToggle,
-  onSidebarClose,
-  onSignOut,
-  currentUser,
-  children,
-}: WorkspaceLayoutProps) {
+export function WorkspaceLayout() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const { theme, toggleTheme, sidebarOpen, setSidebarOpen, toggleSidebar } =
+    useUIStore();
+
+  const role = user?.role ?? "employee";
+  const segment = pathname.split("/").at(-1) as WorkspacePage;
+  const isAdmin = role === "admin";
+  const title = pageTitles[segment]?.(isAdmin) ?? "Dashboard";
   const navItems = sidebarItems[role];
-  const titles: Record<WorkspacePage, string> = {
-    overview: "Dashboard",
-    "new-mission": role === "admin" ? "HR Forms" : "Mission Forms",
-    history: role === "admin" ? "Mission Management" : "Mission History",
-    approval: "Mission Validation",
-    settings: role === "admin" ? "System Settings" : "Profile & Settings",
-    admin: "Admin Dashboard",
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -74,31 +69,40 @@ export function WorkspaceLayout({
       >
         <SidebarContent
           role={role}
-          page={page}
+          pathname={pathname}
           items={navItems}
-          onPageChange={onPageChange}
-          onBackToLanding={onBackToLanding}
-          onClose={onSidebarClose}
+          onNavigate={(path) => {
+            navigate(path);
+            setSidebarOpen(false);
+          }}
+          onBackToLanding={() => {
+            navigate("/");
+            setSidebarOpen(false);
+          }}
+          onClose={() => setSidebarOpen(false)}
         />
       </div>
+
       {sidebarOpen && (
         <button
           className="fixed inset-0 z-30 bg-slate-950/35 lg:hidden"
-          onClick={onSidebarClose}
+          onClick={() => setSidebarOpen(false)}
           aria-label="Close sidebar"
         />
       )}
+
       <aside className="hidden w-[290px] shrink-0 lg:block">
         <div className="fixed inset-y-0 left-0 w-[290px] border-r border-border/60 bg-card/95 p-5">
           <SidebarContent
             role={role}
-            page={page}
+            pathname={pathname}
             items={navItems}
-            onPageChange={onPageChange}
-            onBackToLanding={onBackToLanding}
+            onNavigate={(path) => navigate(path)}
+            onBackToLanding={() => navigate("/")}
           />
         </div>
       </aside>
+
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-xl">
           <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-4 md:px-6 lg:px-8">
@@ -107,7 +111,7 @@ export function WorkspaceLayout({
                 variant="outline"
                 size="icon"
                 className="lg:hidden"
-                onClick={onSidebarToggle}
+                onClick={toggleSidebar}
               >
                 <Menu className="h-5 w-5" />
               </Button>
@@ -116,12 +120,17 @@ export function WorkspaceLayout({
                   <span>Mission Flow</span>
                   <ChevronRight className="h-4 w-4" />
                   <span className="capitalize">
-                    {role === "employee" ? "Employee" : role === "manager" ? "Manager" : "Admin"}
+                    {role === "employee"
+                      ? "Employee"
+                      : role === "manager"
+                        ? "Manager"
+                        : "Admin"}
                   </span>
                 </div>
-                <h1 className="text-2xl font-semibold">{titles[page]}</h1>
+                <h1 className="text-2xl font-semibold">{title}</h1>
               </div>
             </div>
+
             <div className="flex flex-1 items-center justify-end gap-3">
               <div className="relative hidden w-full max-w-sm md:block">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -130,10 +139,8 @@ export function WorkspaceLayout({
                   placeholder="Search missions, employees, destinations..."
                 />
               </div>
-              <ThemeToggleButton theme={theme} onClick={onThemeToggle} />
-              <Button variant="outline" size="icon">
-                <Bell className="h-4 w-4" />
-              </Button>
+              <ThemeToggleButton theme={theme} onClick={toggleTheme} />
+              <NotificationBell />
               <div className="group relative">
                 <button className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-3 py-2 text-left shadow-sm transition hover:border-primary/30">
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -141,24 +148,26 @@ export function WorkspaceLayout({
                   </div>
                   <div className="hidden sm:block">
                     <p className="text-sm font-medium">
-                      {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Mission User"}
+                      {user
+                        ? `${user.firstName} ${user.lastName}`
+                        : "Mission User"}
                     </p>
                     <p className="text-xs text-muted-foreground capitalize">
-                      {currentUser?.role ?? role}
+                      {role}
                     </p>
                   </div>
                 </button>
                 <div className="invisible absolute right-0 top-[calc(100%+0.75rem)] z-20 w-64 rounded-2xl border border-border/70 bg-popover p-2 opacity-0 shadow-xl transition-all group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
                   <button
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-accent"
-                    onClick={() => onPageChange("settings")}
+                    onClick={() => navigate("/workspace/settings")}
                   >
                     <Settings className="h-4 w-4" />
                     Profile settings
                   </button>
                   <button
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-danger hover:bg-danger/10"
-                    onClick={onSignOut}
+                    onClick={handleSignOut}
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out
@@ -168,24 +177,111 @@ export function WorkspaceLayout({
             </div>
           </div>
         </header>
-        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8">{children}</main>
+
+        <main className="flex-1 px-4 py-6 md:px-6 lg:px-8">
+          <Outlet />
+        </main>
       </div>
+    </div>
+  );
+}
+
+function NotificationBell() {
+  const { notifications, unreadCount, markRead, markAllRead } =
+    useNotificationStore();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="relative" ref={ref}>
+      <Button
+        variant="outline"
+        size="icon"
+        className="relative"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Notifications"
+      >
+        <Bell className="h-4 w-4" />
+        {unreadCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+            {unreadCount > 9 ? "9+" : unreadCount}
+          </span>
+        )}
+      </Button>
+
+      {open && (
+        <>
+          <button
+            className="fixed inset-0 z-30"
+            onClick={() => setOpen(false)}
+            aria-label="Close notifications"
+          />
+          <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 w-80 rounded-2xl border border-border/70 bg-popover shadow-xl">
+            <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
+              <p className="text-sm font-semibold">Notifications</p>
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllRead}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <CheckCheck className="h-3 w-3" />
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-80 overflow-y-auto">
+              {notifications.length === 0 ? (
+                <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+                  No notifications yet
+                </p>
+              ) : (
+                notifications.map((n) => (
+                  <div
+                    key={n.id}
+                    className={cn(
+                      "flex items-start gap-3 border-b border-border/40 px-4 py-3 last:border-none",
+                      !n.read && "bg-primary/5",
+                    )}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{n.title}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {n.message}
+                      </p>
+                    </div>
+                    {!n.read && (
+                      <button
+                        onClick={() => markRead(n.id)}
+                        className="shrink-0 text-muted-foreground hover:text-foreground"
+                        aria-label="Mark read"
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
 function SidebarContent({
   role,
-  page,
+  pathname,
   items,
-  onPageChange,
+  onNavigate,
   onBackToLanding,
   onClose,
 }: {
   role: Role;
-  page: WorkspacePage;
+  pathname: string;
   items: SidebarItem[];
-  onPageChange: (page: WorkspacePage) => void;
+  onNavigate: (path: string) => void;
   onBackToLanding: () => void;
   onClose?: () => void;
 }) {
@@ -198,7 +294,9 @@ function SidebarContent({
           </div>
           <div>
             <p className="font-semibold">Mission Flow</p>
-            <p className="text-sm text-muted-foreground capitalize">{role} workspace</p>
+            <p className="text-sm text-muted-foreground capitalize">
+              {role} workspace
+            </p>
           </div>
         </div>
         {onClose ? (
@@ -207,33 +305,40 @@ function SidebarContent({
           </Button>
         ) : null}
       </div>
+
       <div className="mt-8 grid gap-2">
-        {items.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => onPageChange(item.key)}
-            className={cn(
-              "flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition",
-              page === item.key
-                ? "bg-primary text-primary-foreground shadow-glow"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-            {item.label}
-          </button>
-        ))}
+        {items.map((item) => {
+          const path = `/workspace/${item.key}`;
+          const isActive = pathname === path;
+          return (
+            <button
+              key={item.key}
+              onClick={() => onNavigate(path)}
+              className={cn(
+                "flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition",
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-glow"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </button>
+          );
+        })}
       </div>
+
       <Card className="mt-8 border-primary/10 bg-gradient-to-br from-primary/10 to-card">
         <CardHeader className="space-y-3">
           <Badge className="w-fit">Mission health</Badge>
           <CardTitle className="text-base">Policy compliance stays visible.</CardTitle>
           <CardDescription>
-            Travel budgets, approvals, and attachments remain organized across the full
-            mission cycle.
+            Travel budgets, approvals, and attachments remain organized across the
+            full mission cycle.
           </CardDescription>
         </CardHeader>
       </Card>
+
       <button
         onClick={onBackToLanding}
         className="mt-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
