@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Bell,
@@ -192,6 +192,17 @@ function NotificationBell() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!open) return;
+    function handleOutsideClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [open]);
+
   return (
     <div className="relative" ref={ref}>
       <Button
@@ -210,13 +221,7 @@ function NotificationBell() {
       </Button>
 
       {open && (
-        <>
-          <button
-            className="fixed inset-0 z-30"
-            onClick={() => setOpen(false)}
-            aria-label="Close notifications"
-          />
-          <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 w-80 rounded-2xl border border-border/70 bg-popover shadow-xl">
+        <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 w-80 rounded-2xl border border-border/70 bg-popover shadow-xl">
             <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
               <p className="text-sm font-semibold">Notifications</p>
               {unreadCount > 0 && (
@@ -264,7 +269,6 @@ function NotificationBell() {
               )}
             </div>
           </div>
-        </>
       )}
     </div>
   );

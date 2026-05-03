@@ -4,6 +4,7 @@ import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { MissionApprovalPage } from "@/pages/MissionApprovalPage";
+import { MissionHistoryDetailPage } from "@/pages/MissionHistoryDetailPage";
 import { MissionHistoryPage } from "@/pages/MissionHistoryPage";
 import { MissionSubmissionPage } from "@/pages/MissionSubmissionPage";
 import { ProfileSettingsPage } from "@/pages/ProfileSettingsPage";
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
       { path: "overview", element: <UserDashboardPage /> },
       { path: "new-mission", element: <MissionSubmissionPage /> },
       { path: "history", element: <MissionHistoryPage /> },
+      { path: "history/:id", element: <MissionHistoryDetailPage /> },
       { path: "approval", element: <MissionApprovalPage /> },
       { path: "admin", element: <AdminDashboardPage /> },
       { path: "settings", element: <ProfileSettingsPage /> },

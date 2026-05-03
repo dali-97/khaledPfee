@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CalendarRange, Eye, Filter, Search } from "lucide-react";
 import { listMissions } from "@/lib/api";
 import { StatusBadge } from "@/components/mission-flow/primitives";
@@ -24,6 +25,7 @@ const STATUS_FILTERS: { label: string; value: MissionStatus | "" }[] = [
 ];
 
 export function MissionHistoryPage() {
+  const navigate = useNavigate();
   const [missions, setMissions] = useState<MissionDetail[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -172,7 +174,11 @@ export function MissionHistoryPage() {
                           <StatusBadge status={mission.status} />
                         </td>
                         <td className="py-4 text-right">
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate(`/workspace/history/${mission.id}`)}
+                          >
                             <Eye className="h-4 w-4" />
                             Details
                           </Button>
