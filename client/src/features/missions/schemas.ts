@@ -23,10 +23,6 @@ export const missionSchema = z.object({
   mealLunch: z.boolean().optional(),
   mealDinner: z.boolean().optional(),
   comments: z.string().optional(),
-  hierarchicalManager: z.string().optional(),
-  departmentDirector: z.string().optional(),
-  hrApproval: z.string().optional(),
-  formDate: z.string().optional(),
 });
 
 export type MissionFormValues = z.infer<typeof missionSchema>;

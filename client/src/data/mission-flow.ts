@@ -98,13 +98,14 @@ export const sidebarItems: Record<Role, SidebarItem[]> = {
   ],
   manager: [
     { key: "overview", label: "Dashboard", icon: LayoutDashboard },
-    { key: "new-mission", label: "HR Forms", icon: FileText },
+    { key: "team", label: "My Team", icon: Users },
     { key: "history", label: "Mission History", icon: CalendarRange },
     { key: "approval", label: "Approvals", icon: ShieldCheck },
     { key: "settings", label: "Profile & Settings", icon: Settings },
   ],
   admin: [
     { key: "admin", label: "Admin Dashboard", icon: LayoutDashboard },
+    { key: "managers", label: "Manage Managers", icon: Users },
     { key: "history", label: "Mission Management", icon: CalendarRange },
     { key: "approval", label: "Approvals", icon: ShieldCheck },
     { key: "settings", label: "System Settings", icon: Settings },

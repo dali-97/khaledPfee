@@ -39,11 +39,25 @@ export async function connectDatabase() {
       password    VARCHAR(255)   NOT NULL,
       role        ENUM('employee','manager','admin') NOT NULL DEFAULT 'employee',
       company     VARCHAR(190)   DEFAULT '',
+      active      TINYINT(1)     NOT NULL DEFAULT 1,
+      manager_id  INT UNSIGNED   NULL,
       created_at  TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
       updated_at  TIMESTAMP      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      PRIMARY KEY (id)
+      PRIMARY KEY (id),
+      CONSTRAINT fk_users_manager FOREIGN KEY (manager_id) REFERENCES users(id) ON DELETE SET NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
+
+  // Migration: add columns to existing installations that predate them
+  try {
+    await pool.query("ALTER TABLE users ADD COLUMN manager_id INT UNSIGNED NULL");
+    await pool.query(
+      "ALTER TABLE users ADD CONSTRAINT fk_users_manager FOREIGN KEY (manager_id) REFERENCES users(id) ON DELETE SET NULL"
+    );
+  } catch { /* column / constraint already exists */ }
+  try {
+    await pool.query("ALTER TABLE users ADD COLUMN active TINYINT(1) NOT NULL DEFAULT 1");
+  } catch { /* column already exists */ }
 
   // ── Missions (Annexe 01) ─────────────────────────────────────────────────────
   await pool.query(`

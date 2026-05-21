@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import missionRoutes from "./routes/missionRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import managerRoutes from "./routes/managerRoutes.js";
 import sseRoutes from "./routes/sseRoutes.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { sseManager } from "./services/sseService.js";
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/missions", missionRoutes);
 app.use("/api/expense-reports", expenseRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/manager", managerRoutes);
 app.use("/api/events", sseRoutes);
 
 // ── Error handlers ────────────────────────────────────────────────────────────

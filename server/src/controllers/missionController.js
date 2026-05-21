@@ -53,7 +53,7 @@ function serialize(row) {
 }
 
 const JOIN = `
-  SELECT m.*, u.first_name, u.last_name, u.email
+  SELECT m.*, u.first_name, u.last_name, u.email, u.manager_id
   FROM missions m
   LEFT JOIN users u ON m.employee_id = u.id
 `;
@@ -71,6 +71,9 @@ export async function listMissions(req, res, next) {
 
     if (role === "employee") {
       conditions.push("m.employee_id = ?");
+      params.push(userId);
+    } else if (role === "manager") {
+      conditions.push("u.manager_id = ?");
       params.push(userId);
     }
 
@@ -128,10 +131,6 @@ export async function createMission(req, res, next) {
       mealLunch,
       mealDinner,
       comments,
-      hierarchicalManager,
-      departmentDirector,
-      hrApproval,
-      formDate,
     } = req.body;
 
     if (!title?.trim()) {
@@ -145,8 +144,8 @@ export async function createMission(req, res, next) {
           return_location, return_date, return_time,
           extensions, transportation,
           meal_breakfast, meal_lunch, meal_dinner,
-          comments, hierarchical_manager, department_director, hr_approval, form_date)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+          comments, form_date)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURDATE())`,
       [
         userId,
         title.trim(),
@@ -165,10 +164,6 @@ export async function createMission(req, res, next) {
         mealLunch ? 1 : 0,
         mealDinner ? 1 : 0,
         comments || "",
-        hierarchicalManager || "",
-        departmentDirector || "",
-        hrApproval || "",
-        formDate || null,
       ],
     );
 
@@ -184,8 +179,8 @@ export async function createMission(req, res, next) {
     );
     const serialized = serialize(mission);
 
-    // Notify admins and managers
-    sseManager.sendToRoles(["admin", "manager"], "mission:created", {
+    // Notify admins and the employee's own manager
+    const payload = {
       mission: serialized,
       createdBy: {
         id: userId,
@@ -194,7 +189,11 @@ export async function createMission(req, res, next) {
       },
       message: `New mission submitted: "${title.trim()}"`,
       timestamp: new Date().toISOString(),
-    });
+    };
+    sseManager.sendToRole("admin", "mission:created", payload);
+    if (req.user.manager_id) {
+      sseManager.sendToUser(req.user.manager_id, "mission:created", payload);
+    }
 
     return res.status(201).json({ message: "Mission created.", mission: serialized });
   } catch (err) {
@@ -217,6 +216,9 @@ export async function getMission(req, res, next) {
     }
 
     if (role === "employee" && mission.employee_id !== userId) {
+      return res.status(403).json({ message: "Forbidden." });
+    }
+    if (role === "manager" && Number(mission.manager_id) !== userId) {
       return res.status(403).json({ message: "Forbidden." });
     }
 

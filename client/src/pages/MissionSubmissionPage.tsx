@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, CheckCircle2, ChevronRight, Plus, Trash2, Upload } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronRight, Plus, Trash2 } from "lucide-react";
 import {
   expenseReportSchema,
   missionSchema,
@@ -254,31 +254,6 @@ function Annexe01Form() {
                 />
               </CardContent>
             </Card>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            <Field label="Responsable hierarchique">
-              <Input {...register("hierarchicalManager")} placeholder="Manager name" />
-            </Field>
-            <Field label="Directeur du departement">
-              <Input {...register("departmentDirector")} placeholder="Department director" />
-            </Field>
-            <Field label="Aval de la DRH">
-              <Input {...register("hrApproval")} placeholder="HR approval" />
-            </Field>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <Field label="Piece jointe">
-              <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-5 py-6 text-sm">
-                <Upload className="h-5 w-5 text-primary" />
-                Upload mission order attachment
-                <Input type="file" className="hidden" />
-              </label>
-            </Field>
-            <Field label="Date de creation du formulaire">
-              <Input {...register("formDate")} type="date" />
-            </Field>
           </div>
 
           {errors.root && (

@@ -38,6 +38,8 @@ const pageTitles: Record<WorkspacePage, (isAdmin: boolean) => string> = {
   approval: () => "Mission Validation",
   settings: (isAdmin) => (isAdmin ? "System Settings" : "Profile & Settings"),
   admin: () => "Admin Dashboard",
+  managers: () => "Manage Managers",
+  team: () => "My Team",
 };
 
 export function WorkspaceLayout() {

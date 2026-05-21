@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import app from "./app.js";
 import { connectDatabase } from "./config/db.js";
+import { seedAdmin } from "./seed/seedAdmin.js";
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const port = process.env.PORT || 5000;
 async function startServer() {
   try {
     await connectDatabase();
+    await seedAdmin();
     app.listen(port, () => {
       console.log(`Mission Flow API listening on port ${port}`);
     });

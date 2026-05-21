@@ -1,20 +1,23 @@
 import { Router } from "express";
 import {
-  deleteUser,
+  createManager,
+  deleteManager,
+  getManagerEmployees,
   getStats,
-  listUsers,
-  updateUserRole,
+  listManagers,
+  toggleManagerStatus,
 } from "../controllers/adminController.js";
 import { protect, requireRole } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-// All admin routes require authentication + admin role
 router.use(protect, requireRole("admin"));
 
 router.get("/stats", getStats);
-router.get("/users", listUsers);
-router.patch("/users/:id/role", updateUserRole);
-router.delete("/users/:id", deleteUser);
+router.post("/managers", createManager);
+router.get("/managers", listManagers);
+router.get("/managers/:id/employees", getManagerEmployees);
+router.patch("/managers/:id/status", toggleManagerStatus);
+router.delete("/managers/:id", deleteManager);
 
 export default router;

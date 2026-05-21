@@ -8,7 +8,9 @@ export type WorkspacePage =
   | "history"
   | "approval"
   | "settings"
-  | "admin";
+  | "admin"
+  | "managers"
+  | "team";
 export type MissionStatus = "pending" | "approved" | "rejected" | "in-progress";
 export type Transportation =
   | "public_transport"
@@ -126,4 +128,5 @@ export type AuthUser = {
   lastName: string;
   email: string;
   role: Role;
+  managerId: string | null;
 };

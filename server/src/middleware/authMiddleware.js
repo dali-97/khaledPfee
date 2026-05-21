@@ -23,7 +23,7 @@ export async function protect(req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "change-me");
     const db = getDb();
     const [users] = await db.execute(
-      `SELECT id, first_name, last_name, email, role, company, created_at, updated_at
+      `SELECT id, first_name, last_name, email, role, company, manager_id, active, created_at, updated_at
          FROM users WHERE id = ? LIMIT 1`,
       [decoded.id],
     );
@@ -31,6 +31,9 @@ export async function protect(req, res, next) {
 
     if (!req.user) {
       return res.status(401).json({ message: "User no longer exists." });
+    }
+    if (!req.user.active) {
+      return res.status(403).json({ message: "Account is disabled. Contact your administrator." });
     }
 
     next();

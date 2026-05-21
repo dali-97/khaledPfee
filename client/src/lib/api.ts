@@ -14,12 +14,11 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
 
-export type AuthFormPayload = {
-  firstName?: string;
-  lastName?: string;
+export type CreateUserPayload = {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  role: Role;
   company?: string;
 };
 
@@ -52,14 +51,7 @@ async function request<T>(path: string, options: RequestInit) {
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
-export function register(payload: AuthFormPayload) {
-  return request<AuthResponse>("/auth/register", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-export function login(payload: Pick<AuthFormPayload, "email" | "password">) {
+export function login(payload: { email: string; password: string }) {
   return request<AuthResponse>("/auth/login", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -67,8 +59,23 @@ export function login(payload: Pick<AuthFormPayload, "email" | "password">) {
 }
 
 export function getCurrentUser() {
-  return request<{ user: AuthUser }>("/auth/me", {
-    method: "GET",
+  return request<{ user: AuthUser }>("/auth/me", { method: "GET" });
+}
+
+export type UpdateProfilePayload = { firstName: string; lastName: string; email: string };
+export type ChangePasswordPayload = { currentPassword: string; newPassword: string };
+
+export function updateProfile(payload: UpdateProfilePayload) {
+  return request<{ user: AuthUser }>("/auth/profile", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function changePassword(payload: ChangePasswordPayload) {
+  return request<{ message: string }>("/auth/password", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
   });
 }
 
@@ -110,16 +117,10 @@ export function listMissions(params?: ListMissionsParams) {
 }
 
 export function getMission(id: string) {
-  return request<{ mission: MissionDetail }>(`/missions/${id}`, {
-    method: "GET",
-  });
+  return request<{ mission: MissionDetail }>(`/missions/${id}`, { method: "GET" });
 }
 
-export function updateMissionStatus(
-  id: string,
-  status: MissionStatus,
-  managerComment?: string,
-) {
+export function updateMissionStatus(id: string, status: MissionStatus, managerComment?: string) {
   return request<{ mission: MissionDetail }>(`/missions/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status, managerComment }),
@@ -131,37 +132,6 @@ export function updateMissionStatus(
 export function createExpenseReport(payload: ExpenseReportFormValues) {
   return request<{ report: ExpenseReport }>("/expense-reports", {
     method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-export function listExpenseReports() {
-  return request<{ reports: ExpenseReport[] }>("/expense-reports", {
-    method: "GET",
-  });
-}
-
-export function getExpenseReport(id: string) {
-  return request<{ report: ExpenseReport }>(`/expense-reports/${id}`, {
-    method: "GET",
-  });
-}
-
-// ─── Profile ──────────────────────────────────────────────────────────────────
-
-export type UpdateProfilePayload = { firstName: string; lastName: string; email: string };
-export type ChangePasswordPayload = { currentPassword: string; newPassword: string };
-
-export function updateProfile(payload: UpdateProfilePayload) {
-  return request<{ user: AuthUser }>("/auth/profile", {
-    method: "PATCH",
-    body: JSON.stringify(payload),
-  });
-}
-
-export function changePassword(payload: ChangePasswordPayload) {
-  return request<{ message: string }>("/auth/password", {
-    method: "PATCH",
     body: JSON.stringify(payload),
   });
 }
@@ -178,23 +148,69 @@ export type AdminUser = {
   lastName: string;
   email: string;
   role: Role;
+  company: string;
+  active: boolean;
   createdAt: string;
 };
 
-export function listAdminUsers(params?: { search?: string; role?: Role }) {
-  const qs = new URLSearchParams();
-  if (params?.search) qs.set("search", params.search);
-  if (params?.role) qs.set("role", params.role);
-  const query = qs.toString();
-  return request<{ users: AdminUser[] }>(
-    `/admin/users${query ? `?${query}` : ""}`,
-    { method: "GET" },
-  );
+export type ManagerUser = AdminUser & { employeeCount: number };
+
+export function createManager(payload: CreateUserPayload) {
+  return request<{ user: AdminUser }>("/admin/managers", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
-export function updateUserRole(userId: string, role: Role) {
-  return request<{ user: AdminUser }>(`/admin/users/${userId}/role`, {
+export function listManagers() {
+  return request<{ managers: ManagerUser[] }>("/admin/managers", { method: "GET" });
+}
+
+export function getManagerEmployees(managerId: string) {
+  return request<{ employees: EmployeeUser[] }>(`/admin/managers/${managerId}/employees`, {
+    method: "GET",
+  });
+}
+
+export function toggleManagerStatus(managerId: string) {
+  return request<{ active: boolean }>(`/admin/managers/${managerId}/status`, {
     method: "PATCH",
-    body: JSON.stringify({ role }),
+  });
+}
+
+export function deleteManager(managerId: string) {
+  return request<{ message: string }>(`/admin/managers/${managerId}`, {
+    method: "DELETE",
+  });
+}
+
+// ─── Manager ──────────────────────────────────────────────────────────────────
+
+export type EmployeeUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: Role;
+  company: string;
+  managerId: string | null;
+  active: boolean;
+  createdAt: string;
+};
+
+export function createEmployee(payload: CreateUserPayload) {
+  return request<{ user: EmployeeUser }>("/manager/employees", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function listManagerEmployees() {
+  return request<{ employees: EmployeeUser[] }>("/manager/employees", { method: "GET" });
+}
+
+export function toggleEmployeeStatus(employeeId: string) {
+  return request<{ active: boolean }>(`/manager/employees/${employeeId}/status`, {
+    method: "PATCH",
   });
 }

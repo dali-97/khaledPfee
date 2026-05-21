@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { WorkspaceLayout } from "@/layouts/WorkspaceLayout";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
+import { ManagersPage } from "@/pages/ManagersPage";
+import { TeamPage } from "@/pages/TeamPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { MissionApprovalPage } from "@/pages/MissionApprovalPage";
 import { MissionHistoryDetailPage } from "@/pages/MissionHistoryDetailPage";
@@ -22,8 +24,8 @@ function WorkspaceIndex() {
 
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
-  { path: "/login", element: <AuthPage mode="login" /> },
-  { path: "/register", element: <AuthPage mode="register" /> },
+  { path: "/login", element: <AuthPage /> },
+  { path: "/register", element: <Navigate to="/login" replace /> },
   {
     path: "/workspace",
     element: (
@@ -39,6 +41,8 @@ export const router = createBrowserRouter([
       { path: "history/:id", element: <MissionHistoryDetailPage /> },
       { path: "approval", element: <MissionApprovalPage /> },
       { path: "admin", element: <AdminDashboardPage /> },
+      { path: "managers", element: <ManagersPage /> },
+      { path: "team", element: <TeamPage /> },
       { path: "settings", element: <ProfileSettingsPage /> },
     ],
   },
