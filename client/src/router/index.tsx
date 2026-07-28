@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { WorkspaceLayout } from "@/layouts/WorkspaceLayout";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
+import { ExpenseReportDetailPage } from "@/pages/ExpenseReportDetailPage";
 import { ManagersPage } from "@/pages/ManagersPage";
 import { TeamPage } from "@/pages/TeamPage";
 import { LandingPage } from "@/pages/LandingPage";
@@ -38,6 +39,8 @@ export const router = createBrowserRouter([
       { path: "overview", element: <UserDashboardPage /> },
       { path: "new-mission", element: <MissionSubmissionPage /> },
       { path: "history", element: <MissionHistoryPage /> },
+      // Static segment is ranked above "history/:id", so no conflict.
+      { path: "history/expense/:id", element: <ExpenseReportDetailPage /> },
       { path: "history/:id", element: <MissionHistoryDetailPage /> },
       { path: "approval", element: <MissionApprovalPage /> },
       { path: "admin", element: <AdminDashboardPage /> },

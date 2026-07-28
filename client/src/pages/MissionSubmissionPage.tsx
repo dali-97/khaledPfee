@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, ChevronRight, Plus, Trash2 } from "lucide-rea
 import {
   expenseReportSchema,
   missionSchema,
+  type ExpenseReportFormInput,
   type ExpenseReportFormValues,
   type MissionFormValues,
 } from "@/features/missions/schemas";
@@ -22,13 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuthStore } from "@/store/authStore";
 
 export function MissionSubmissionPage() {
-  const user = useAuthStore((state) => state.user);
-  const role = user?.role ?? "employee";
-  const canAccessHRForm = role === "manager" || role === "admin";
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -36,24 +32,20 @@ export function MissionSubmissionPage() {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Dashboard</span>
             <ChevronRight className="h-4 w-4" />
-            <span>{canAccessHRForm ? "HR Forms" : "Mission Forms"}</span>
+            <span>Mission Forms</span>
           </div>
           <h2 className="mt-2 text-3xl font-semibold">Mission documents workflow</h2>
           <p className="mt-2 max-w-3xl text-muted-foreground">
             The first form is based on the employee mission order document, and the second form follows the HR and PHR mission expense sheet.
           </p>
         </div>
-        <Badge variant="muted">{canAccessHRForm ? "HR + PHR" : "Employee"}</Badge>
+        <Badge variant="muted">Employee + HR / PHR</Badge>
       </div>
 
-      <Tabs defaultValue={canAccessHRForm ? "hr" : "employee"} className="space-y-6">
+      <Tabs defaultValue="employee" className="space-y-6">
         <TabsList className="grid w-full max-w-xl grid-cols-2">
-          <TabsTrigger value="employee" disabled={canAccessHRForm && role !== "admin"}>
-            Employee form
-          </TabsTrigger>
-          <TabsTrigger value="hr" disabled={!canAccessHRForm}>
-            HR expense form
-          </TabsTrigger>
+          <TabsTrigger value="employee">Employee form</TabsTrigger>
+          <TabsTrigger value="hr">HR expense form</TabsTrigger>
         </TabsList>
 
         <TabsContent value="employee">
@@ -281,7 +273,7 @@ function Annexe03Form() {
     reset,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<ExpenseReportFormValues>({
+  } = useForm<ExpenseReportFormInput, unknown, ExpenseReportFormValues>({
     resolver: zodResolver(expenseReportSchema),
     defaultValues: { rows: [{}] },
   });

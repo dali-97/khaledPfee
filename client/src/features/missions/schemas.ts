@@ -60,4 +60,9 @@ export const expenseReportSchema = z.object({
     .optional(),
 });
 
-export type ExpenseReportFormValues = z.infer<typeof expenseReportSchema>;
+/**
+ * `rows` has a `.default([])`, so the value the form holds (input) and the
+ * value the resolver produces (output) are different types. useForm needs both.
+ */
+export type ExpenseReportFormInput = z.input<typeof expenseReportSchema>;
+export type ExpenseReportFormValues = z.output<typeof expenseReportSchema>;

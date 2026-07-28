@@ -66,6 +66,16 @@ export function useSSE() {
       });
     });
 
+    es.addEventListener("expense_report:status_changed", (e) => {
+      const data = JSON.parse(e.data) as { message: string; status: string };
+      addNotification({
+        type: "expense_report:status_changed",
+        title: `Expense Report ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}`,
+        message: data.message,
+        data,
+      });
+    });
+
     es.onerror = () => {
       // Browser will auto-reconnect after a short delay — no action needed
     };

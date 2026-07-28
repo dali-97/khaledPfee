@@ -47,8 +47,7 @@ export function WorkspaceLayout() {
   const { pathname } = useLocation();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const { theme, toggleTheme, sidebarOpen, setSidebarOpen, toggleSidebar } =
-    useUIStore();
+  const { theme, toggleTheme, sidebarOpen, setSidebarOpen, toggleSidebar } = useUIStore();
 
   const role = user?.role ?? "employee";
   const segment = pathname.split("/").at(-1) as WorkspacePage;

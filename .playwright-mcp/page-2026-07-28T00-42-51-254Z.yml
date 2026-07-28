@@ -1,0 +1,142 @@
+- generic [ref=f4e2]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]:
+        - generic [ref=f4e11]:
+          - paragraph [ref=f4e12]: Mission Flow
+          - paragraph [ref=f4e13]: employee workspace
+        - button [ref=f4e14] [cursor=pointer]
+      - generic [ref=f4e18]:
+        - button "Dashboard" [ref=f4e19] [cursor=pointer]
+        - button "Mission Forms" [ref=f4e25] [cursor=pointer]
+        - button "Mission History" [ref=f4e29] [cursor=pointer]
+        - button "Profile & Settings" [ref=f4e32] [cursor=pointer]
+      - generic [ref=f4e37]:
+        - generic [ref=f4e38]: Mission health
+        - heading "Policy compliance stays visible." [level=3] [ref=f4e39]
+        - paragraph [ref=f4e40]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+      - button "Back to landing page" [ref=f4e41] [cursor=pointer]
+    - generic [ref=f4e47]:
+      - banner [ref=f4e48]:
+        - generic [ref=f4e49]:
+          - generic [ref=f4e50]:
+            - button [ref=f4e51] [cursor=pointer]
+            - generic [ref=f4e53]:
+              - generic [ref=f4e54]:
+                - generic [ref=f4e55]: Mission Flow
+                - generic [ref=f4e58]: Employee
+              - heading "Mission Forms" [level=1] [ref=f4e59]
+          - generic [ref=f4e60]:
+            - textbox "Search missions, employees, destinations..." [ref=f4e62]
+            - button [ref=f4e63] [cursor=pointer]
+            - button "Notifications" [ref=f4e67] [cursor=pointer]
+            - button [ref=f4e72] [cursor=pointer]:
+              - generic [ref=f4e77]:
+                - paragraph [ref=f4e78]: undefined undefined
+                - paragraph [ref=f4e79]: employee
+      - main [ref=f4e80]:
+        - generic [ref=f4e81]:
+          - generic [ref=f4e82]:
+            - generic [ref=f4e83]:
+              - generic [ref=f4e84]:
+                - generic [ref=f4e85]: Dashboard
+                - generic [ref=f4e88]: Mission Forms
+              - heading "Mission documents workflow" [level=2] [ref=f4e89]
+              - paragraph [ref=f4e90]: The first form is based on the employee mission order document, and the second form follows the HR and PHR mission expense sheet.
+            - generic [ref=f4e91]: Employee + HR / PHR
+          - generic [ref=f4e92]:
+            - generic [ref=f4e93]:
+              - button "Employee form" [ref=f4e94] [cursor=pointer]
+              - button "HR expense form" [ref=f4e95] [cursor=pointer]
+            - generic [ref=f4e97]:
+              - generic [ref=f4e98]:
+                - generic [ref=f4e99]: Annexe 01
+                - heading "Ordre de mission - Employee" [level=3] [ref=f4e100]
+                - paragraph [ref=f4e101]: "This form follows the mission order template: employee identity, mission object, departure and return details, transport, meal expenses, and manager signatures."
+              - generic [ref=f4e103]:
+                - generic [ref=f4e104]:
+                  - generic [ref=f4e105]: Titre de la mission
+                  - textbox "Titre de la mission" [ref=f4e106]:
+                    - /placeholder: Client implementation sprint
+                - generic [ref=f4e107]:
+                  - generic [ref=f4e108]:
+                    - generic [ref=f4e109]: Matricule
+                    - textbox "Matricule" [ref=f4e110]:
+                      - /placeholder: EMP-0148
+                  - generic [ref=f4e111]:
+                    - generic [ref=f4e112]: Nom
+                    - textbox "Nom" [ref=f4e113]:
+                      - /placeholder: Ben Salah
+                  - generic [ref=f4e114]:
+                    - generic [ref=f4e115]: Prenom
+                    - textbox "Prenom" [ref=f4e116]:
+                      - /placeholder: Khaled
+                  - generic [ref=f4e117]:
+                    - generic [ref=f4e118]: Departement / Service
+                    - textbox "Departement / Service" [ref=f4e119]:
+                      - /placeholder: Operations
+                - generic [ref=f4e120]:
+                  - generic [ref=f4e121]: Objet de la mission
+                  - textbox "Objet de la mission" [ref=f4e122]:
+                    - /placeholder: Describe the mission purpose exactly as it should appear on the mission order.
+                - generic [ref=f4e123]:
+                  - generic [ref=f4e124]:
+                    - heading "Departure details" [level=3] [ref=f4e126]
+                    - generic [ref=f4e127]:
+                      - generic [ref=f4e128]:
+                        - generic [ref=f4e129]: Lieu de depart
+                        - textbox "Lieu de depart" [ref=f4e130]:
+                          - /placeholder: Tunis
+                      - generic [ref=f4e131]:
+                        - generic [ref=f4e132]: Date de depart
+                        - textbox "Date de depart" [ref=f4e133]
+                      - generic [ref=f4e134]:
+                        - generic [ref=f4e135]: Heure de depart
+                        - textbox "Heure de depart" [ref=f4e136]
+                  - generic [ref=f4e137]:
+                    - heading "Return details" [level=3] [ref=f4e139]
+                    - generic [ref=f4e140]:
+                      - generic [ref=f4e141]:
+                        - generic [ref=f4e142]: Lieu de retour
+                        - textbox "Lieu de retour" [ref=f4e143]:
+                          - /placeholder: Sfax
+                      - generic [ref=f4e144]:
+                        - generic [ref=f4e145]: Date de retour
+                        - textbox "Date de retour" [ref=f4e146]
+                      - generic [ref=f4e147]:
+                        - generic [ref=f4e148]: Heure de retour
+                        - textbox "Heure de retour" [ref=f4e149]
+                - generic [ref=f4e150]:
+                  - generic [ref=f4e151]: Extension de la mission / details complementaires
+                  - textbox "Extension de la mission / details complementaires" [ref=f4e152]:
+                    - /placeholder: Add any mission extension, destination extension, or operational note.
+                - generic [ref=f4e153]:
+                  - generic [ref=f4e154]:
+                    - heading "Moyen de transport utilise" [level=3] [ref=f4e156]
+                    - generic [ref=f4e157]:
+                      - generic [ref=f4e158] [cursor=pointer]:
+                        - radio "Transports en commun" [ref=f4e159]
+                        - text: Transports en commun
+                      - generic [ref=f4e160] [cursor=pointer]:
+                        - radio "Voiture personnelle" [ref=f4e161]
+                        - text: Voiture personnelle
+                      - generic [ref=f4e162] [cursor=pointer]:
+                        - radio "Vehicule de service" [ref=f4e163]
+                        - text: Vehicule de service
+                  - generic [ref=f4e164]:
+                    - heading "Frais de repas" [level=3] [ref=f4e166]
+                    - generic [ref=f4e167]:
+                      - generic [ref=f4e168] [cursor=pointer]:
+                        - checkbox "Petit dejeuner" [ref=f4e169]
+                        - text: Petit dejeuner
+                      - generic [ref=f4e170] [cursor=pointer]:
+                        - checkbox "Dejeuner" [ref=f4e171]
+                        - text: Dejeuner
+                      - generic [ref=f4e172] [cursor=pointer]:
+                        - checkbox "Diner" [ref=f4e173]
+                        - text: Diner
+                  - generic [ref=f4e174]:
+                    - heading "Commentaire" [level=3] [ref=f4e176]
+                    - textbox "Explications / commentaires" [ref=f4e178]
+                - button "Submit Employee Request" [ref=f4e180] [cursor=pointer]
+  - region "Notifications Alt+T"

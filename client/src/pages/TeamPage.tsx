@@ -9,6 +9,7 @@ import {
   toggleEmployeeStatus,
   type EmployeeUser,
 } from "@/lib/api";
+import { ExpenseReportsCard } from "@/components/mission-flow/ExpenseReportsCard";
 import { Field } from "@/components/mission-flow/primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -139,6 +140,8 @@ export function TeamPage() {
           ))}
         </CardContent>
       </Card>
+
+      <ExpenseReportsCard />
     </div>
   );
 }

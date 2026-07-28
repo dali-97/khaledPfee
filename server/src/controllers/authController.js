@@ -59,7 +59,9 @@ export async function login(req, res, next) {
 }
 
 export async function me(req, res) {
-  res.status(200).json({ user: req.user });
+  // Must match the shape login() returns — the client overwrites its stored
+  // session with this response, so a raw DB row would drop firstName/lastName.
+  res.status(200).json({ user: serializeUser(req.user) });
 }
 
 export async function updateProfile(req, res, next) {

@@ -1,0 +1,55 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - generic [ref=f5e11]:
+          - paragraph [ref=f5e12]: Mission Flow
+          - paragraph [ref=f5e13]: employee workspace
+        - button [ref=f5e14] [cursor=pointer]
+      - generic [ref=f5e18]:
+        - button "Dashboard" [ref=f5e19] [cursor=pointer]
+        - button "Mission Forms" [ref=f5e25] [cursor=pointer]
+        - button "Mission History" [ref=f5e29] [cursor=pointer]
+        - button "Profile & Settings" [ref=f5e32] [cursor=pointer]
+      - generic [ref=f5e37]:
+        - generic [ref=f5e38]: Mission health
+        - heading "Policy compliance stays visible." [level=3] [ref=f5e39]
+        - paragraph [ref=f5e40]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+      - button "Back to landing page" [ref=f5e41] [cursor=pointer]
+    - generic [ref=f5e47]:
+      - banner [ref=f5e48]:
+        - generic [ref=f5e49]:
+          - generic [ref=f5e50]:
+            - button [ref=f5e51] [cursor=pointer]
+            - generic [ref=f5e53]:
+              - generic [ref=f5e54]:
+                - generic [ref=f5e55]: Mission Flow
+                - generic [ref=f5e58]: Employee
+              - heading "Mission Forms" [level=1] [ref=f5e59]
+          - generic [ref=f5e60]:
+            - textbox "Search missions, employees, destinations..." [ref=f5e62]
+            - button [ref=f5e63] [cursor=pointer]
+            - button "Notifications" [ref=f5e67] [cursor=pointer]
+            - button [ref=f5e72] [cursor=pointer]:
+              - generic [ref=f5e77]:
+                - paragraph [ref=f5e78]: undefined undefined
+                - paragraph [ref=f5e79]: employee
+      - main [ref=f5e80]:
+        - generic [ref=f5e81]:
+          - generic [ref=f5e82]:
+            - generic [ref=f5e83]:
+              - generic [ref=f5e84]:
+                - generic [ref=f5e85]: Dashboard
+                - generic [ref=f5e88]: Mission Forms
+              - heading "Mission documents workflow" [level=2] [ref=f5e89]
+              - paragraph [ref=f5e90]: The first form is based on the employee mission order document, and the second form follows the HR and PHR mission expense sheet.
+            - generic [ref=f5e91]: Employee + HR / PHR
+          - generic [ref=f5e92]:
+            - generic [ref=f5e93]:
+              - button "Employee form" [ref=f5e94] [cursor=pointer]
+              - button "HR expense form" [ref=f5e95] [cursor=pointer]
+            - generic [ref=f5e276]:
+              - paragraph [ref=f5e280]: Expense report submitted
+              - paragraph [ref=f5e281]: The report has been forwarded to admin for review.
+              - button "Submit another" [ref=f5e282] [cursor=pointer]
+  - region "Notifications Alt+T"

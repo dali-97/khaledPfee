@@ -136,6 +136,34 @@ export function createExpenseReport(payload: ExpenseReportFormValues) {
   });
 }
 
+/**
+ * Scoped server-side by role: admins get every report, managers get their
+ * team's, employees get their own.
+ */
+export function listExpenseReports() {
+  return request<{ reports: ExpenseReport[] }>("/expense-reports", {
+    method: "GET",
+  });
+}
+
+export function getExpenseReport(id: string) {
+  return request<{ report: ExpenseReport }>(`/expense-reports/${id}`, {
+    method: "GET",
+  });
+}
+
+/** Admin, or the submitter's own manager, approves or rejects a report. */
+export function updateExpenseReportStatus(
+  id: string,
+  status: "approved" | "rejected",
+  managerComment?: string,
+) {
+  return request<{ report: ExpenseReport }>(`/expense-reports/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status, managerComment }),
+  });
+}
+
 // ─── Admin ────────────────────────────────────────────────────────────────────
 
 export function getAdminStats() {

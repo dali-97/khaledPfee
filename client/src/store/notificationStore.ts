@@ -3,7 +3,8 @@ import { create } from "zustand";
 export type NotificationEvent =
   | "mission:created"
   | "mission:status_changed"
-  | "expense_report:created";
+  | "expense_report:created"
+  | "expense_report:status_changed";
 
 export type Notification = {
   id: string;

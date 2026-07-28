@@ -115,7 +115,8 @@ export async function connectDatabase() {
       phr_manager    VARCHAR(200)   DEFAULT '',
       phr_initials   VARCHAR(20)    DEFAULT '',
       phr_signature  ENUM('Pending','Validated','Returned for update') DEFAULT 'Pending',
-      status         ENUM('draft','submitted','approved') NOT NULL DEFAULT 'submitted',
+      manager_comment TEXT,
+      status         ENUM('draft','submitted','approved','rejected') NOT NULL DEFAULT 'submitted',
       created_at     TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
       updated_at     TIMESTAMP      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (id),
@@ -123,6 +124,16 @@ export async function connectDatabase() {
       FOREIGN KEY (created_by)  REFERENCES users(id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
+
+  // Migration: review fields on installations that predate them
+  try {
+    await pool.query("ALTER TABLE expense_reports ADD COLUMN manager_comment TEXT");
+  } catch { /* column already exists */ }
+  try {
+    await pool.query(
+      "ALTER TABLE expense_reports MODIFY COLUMN status ENUM('draft','submitted','approved','rejected') NOT NULL DEFAULT 'submitted'",
+    );
+  } catch { /* enum already widened */ }
 
   // ── Refresh Tokens ───────────────────────────────────────────────────────────
   await pool.query(`

@@ -1,0 +1,74 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e485]:
+    - generic [ref=f5e487]:
+      - generic [ref=f5e493]:
+        - paragraph [ref=f5e494]: Mission Flow
+        - paragraph [ref=f5e495]: admin workspace
+      - generic [ref=f5e500]:
+        - button "Admin Dashboard" [ref=f5e501] [cursor=pointer]
+        - button "Manage Managers" [ref=f5e507] [cursor=pointer]
+        - button "Mission Management" [ref=f5e513] [cursor=pointer]
+        - button "Approvals" [ref=f5e516] [cursor=pointer]
+        - button "System Settings" [ref=f5e520] [cursor=pointer]
+      - generic [ref=f5e525]:
+        - generic [ref=f5e526]: Mission health
+        - heading "Policy compliance stays visible." [level=3] [ref=f5e527]
+        - paragraph [ref=f5e528]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+      - button "Back to landing page" [ref=f5e529] [cursor=pointer]
+    - complementary [ref=f5e818]:
+      - generic [ref=f5e820]:
+        - generic [ref=f5e826]:
+          - paragraph [ref=f5e827]: Mission Flow
+          - paragraph [ref=f5e828]: admin workspace
+        - generic [ref=f5e829]:
+          - button "Admin Dashboard" [ref=f5e830] [cursor=pointer]
+          - button "Manage Managers" [ref=f5e836] [cursor=pointer]
+          - button "Mission Management" [ref=f5e842] [cursor=pointer]
+          - button "Approvals" [ref=f5e845] [cursor=pointer]
+          - button "System Settings" [ref=f5e849] [cursor=pointer]
+        - generic [ref=f5e854]:
+          - generic [ref=f5e855]: Mission health
+          - heading "Policy compliance stays visible." [level=3] [ref=f5e856]
+          - paragraph [ref=f5e857]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+        - button "Back to landing page" [ref=f5e858] [cursor=pointer]
+    - generic [ref=f5e535]:
+      - banner [ref=f5e536]:
+        - generic [ref=f5e537]:
+          - generic [ref=f5e541]:
+            - generic [ref=f5e542]:
+              - generic [ref=f5e543]: Mission Flow
+              - generic [ref=f5e546]: Admin
+            - heading "Mission Management" [level=1] [ref=f5e918]
+          - generic [ref=f5e548]:
+            - textbox "Search missions, employees, destinations..." [ref=f5e550]
+            - button [ref=f5e551] [cursor=pointer]
+            - button "Notifications" [ref=f5e555] [cursor=pointer]:
+              - generic [ref=f5e901]: "1"
+            - button [ref=f5e560] [cursor=pointer]:
+              - generic [ref=f5e565]:
+                - paragraph [ref=f5e566]: Admin User
+                - paragraph [ref=f5e567]: admin
+      - main [ref=f5e568]:
+        - generic [ref=f5e919]:
+          - generic [ref=f5e920]:
+            - generic [ref=f5e921]:
+              - heading "Mission history" [level=2] [ref=f5e922]
+              - paragraph [ref=f5e923]: Responsive table layout with filters, search, sorting, status badges, and detail actions.
+            - button "Newest first" [ref=f5e925] [cursor=pointer]
+          - generic [ref=f5e928]:
+            - generic [ref=f5e929]:
+              - generic [ref=f5e930]:
+                - generic [ref=f5e931]:
+                  - heading "Mission records" [level=3] [ref=f5e932]
+                  - paragraph [ref=f5e933]: Search and review submitted, approved, rejected, and active missions.
+                - textbox "Search by title, employee…" [ref=f5e935]
+              - generic [ref=f5e936]:
+                - button "All" [ref=f5e939] [cursor=pointer]
+                - button "Pending" [ref=f5e940] [cursor=pointer]
+                - button "Approved" [ref=f5e941] [cursor=pointer]
+                - button "Rejected" [ref=f5e942] [cursor=pointer]
+                - button "In Progress" [ref=f5e943] [cursor=pointer]
+            - generic [ref=f5e944]:
+              - paragraph [ref=f5e945]: No missions found.
+              - paragraph [ref=f5e947]: Showing 0 of mission entries
+  - region "Notifications Alt+T"

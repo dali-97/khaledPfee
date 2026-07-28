@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\MedAli\\\\Desktop\\\\khaled_pfe\\\\server\\\\src\" -Recurse | Where-Object {$_.Extension -in '.js','.ts','.json'} | Select-Object FullName)",
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\MedAli\\\\Desktop\\\\khaled_pfe\\\\client\\\\src\" -Recurse | Where-Object {$_.Extension -in '.tsx','.ts'} | Select-Object FullName | Select-Object -First 30)"
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\MedAli\\\\Desktop\\\\khaled_pfe\\\\client\\\\src\" -Recurse | Where-Object {$_.Extension -in '.tsx','.ts'} | Select-Object FullName | Select-Object -First 30)",
+      "PowerShell(npx tsc --noEmit -p client/tsconfig.app.json)"
     ]
   }
 }

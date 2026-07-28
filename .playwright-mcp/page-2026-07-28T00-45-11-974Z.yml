@@ -1,0 +1,117 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - generic [ref=f5e11]:
+          - paragraph [ref=f5e12]: Mission Flow
+          - paragraph [ref=f5e13]: employee workspace
+        - button [ref=f5e14] [cursor=pointer]
+      - generic [ref=f5e18]:
+        - button "Dashboard" [ref=f5e19] [cursor=pointer]
+        - button "Mission Forms" [ref=f5e25] [cursor=pointer]
+        - button "Mission History" [ref=f5e29] [cursor=pointer]
+        - button "Profile & Settings" [ref=f5e32] [cursor=pointer]
+      - generic [ref=f5e37]:
+        - generic [ref=f5e38]: Mission health
+        - heading "Policy compliance stays visible." [level=3] [ref=f5e39]
+        - paragraph [ref=f5e40]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+      - button "Back to landing page" [ref=f5e41] [cursor=pointer]
+    - generic [ref=f5e47]:
+      - banner [ref=f5e48]:
+        - generic [ref=f5e49]:
+          - generic [ref=f5e50]:
+            - button [ref=f5e51] [cursor=pointer]
+            - generic [ref=f5e53]:
+              - generic [ref=f5e54]:
+                - generic [ref=f5e55]: Mission Flow
+                - generic [ref=f5e58]: Employee
+              - heading "Dashboard" [level=1] [ref=f5e313]
+          - generic [ref=f5e60]:
+            - textbox "Search missions, employees, destinations..." [ref=f5e62]
+            - button [ref=f5e63] [cursor=pointer]
+            - button "Notifications" [ref=f5e67] [cursor=pointer]
+            - generic [ref=f5e71]:
+              - button [active] [ref=f5e72] [cursor=pointer]:
+                - generic [ref=f5e77]:
+                  - paragraph [ref=f5e78]: undefined undefined
+                  - paragraph [ref=f5e79]: employee
+              - generic [ref=f5e314]:
+                - button "Profile settings" [ref=f5e315] [cursor=pointer]
+                - button "Sign out" [ref=f5e319] [cursor=pointer]
+      - main [ref=f5e80]:
+        - generic [ref=f5e323]:
+          - generic [ref=f5e325]:
+            - generic [ref=f5e326]:
+              - generic [ref=f5e327]: Employee workspace
+              - heading "Welcome back, undefined undefined" [level=3] [ref=f5e328]
+              - paragraph [ref=f5e329]: Track your active missions and submit new travel requests.
+            - button "New mission" [ref=f5e330] [cursor=pointer]
+          - generic [ref=f5e333]:
+            - generic [ref=f5e334]:
+              - generic [ref=f5e335]:
+                - generic [ref=f5e336]: Active mission
+                - heading "Current trip summary" [level=3] [ref=f5e337]
+                - paragraph [ref=f5e338]: Live mission details with status, timeline, and transport method.
+              - paragraph [ref=f5e340]: No active mission right now.
+            - generic [ref=f5e341]:
+              - generic [ref=f5e344]:
+                - paragraph [ref=f5e345]: Total Missions
+                - paragraph [ref=f5e346]: "28"
+                - paragraph [ref=f5e347]: +12% this quarter
+              - generic [ref=f5e355]:
+                - paragraph [ref=f5e356]: In Progress
+                - paragraph [ref=f5e357]: "3"
+                - paragraph [ref=f5e358]: 1 departing this week
+              - generic [ref=f5e364]:
+                - paragraph [ref=f5e365]: Approved Missions
+                - paragraph [ref=f5e366]: "19"
+                - paragraph [ref=f5e367]: Fast-tracked approvals
+              - generic [ref=f5e374]:
+                - paragraph [ref=f5e375]: Pending / Rejected
+                - paragraph [ref=f5e376]: "6"
+                - paragraph [ref=f5e377]: 2 need updates
+          - generic [ref=f5e382]:
+            - generic [ref=f5e383]:
+              - generic [ref=f5e384]:
+                - heading "Recent missions" [level=3] [ref=f5e385]
+                - paragraph [ref=f5e386]: Your last submitted requests with live approval status.
+              - button "View all" [ref=f5e387] [cursor=pointer]
+            - paragraph [ref=f5e391]:
+              - text: No missions yet.
+              - button "Submit your first mission." [ref=f5e392] [cursor=pointer]
+          - generic [ref=f5e393]:
+            - generic [ref=f5e394]:
+              - generic [ref=f5e395]:
+                - heading "Status overview" [level=3] [ref=f5e396]
+                - paragraph [ref=f5e397]: Mission distribution across all lifecycle stages.
+              - generic [ref=f5e398]:
+                - generic [ref=f5e399]:
+                  - paragraph [ref=f5e400]: Pending review
+                  - generic [ref=f5e401]: 0 missions
+                - generic [ref=f5e402]:
+                  - paragraph [ref=f5e403]: Approved
+                  - generic [ref=f5e404]: 0 missions
+                - generic [ref=f5e405]:
+                  - paragraph [ref=f5e406]: Rejected
+                  - generic [ref=f5e407]: 0 missions
+                - generic [ref=f5e408]:
+                  - paragraph [ref=f5e409]: In progress
+                  - generic [ref=f5e410]: 0 missions
+            - generic [ref=f5e411]:
+              - generic [ref=f5e412]:
+                - heading "Quick actions" [level=3] [ref=f5e413]
+                - paragraph [ref=f5e414]: Common tasks for your workspace role.
+              - generic [ref=f5e416]:
+                - generic [ref=f5e417]:
+                  - paragraph [ref=f5e418]: Department
+                  - paragraph [ref=f5e419]: khaled.employee@example.com
+                - generic [ref=f5e420]:
+                  - paragraph [ref=f5e421]: Role
+                  - paragraph [ref=f5e422]: employee
+                - generic [ref=f5e423]:
+                  - paragraph [ref=f5e424]: Active missions
+                  - paragraph [ref=f5e425]: "0"
+                - generic [ref=f5e426]:
+                  - paragraph [ref=f5e427]: Pending approval
+                  - paragraph [ref=f5e428]: "0"
+  - region "Notifications Alt+T"

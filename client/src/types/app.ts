@@ -91,7 +91,14 @@ export type ExpenseReport = {
   phrManager: string;
   phrInitials: string;
   phrSignature: "Pending" | "Validated" | "Returned for update";
-  status: "draft" | "submitted" | "approved";
+  /** Review note left by the approving manager or admin */
+  managerComment: string;
+  status: "draft" | "submitted" | "approved" | "rejected";
+  /** Account name of the user who submitted the report */
+  submittedBy: string;
+  submittedByEmail: string;
+  /** Reference of the linked mission, when one was provided */
+  missionReference: string;
   rows: ExpenseRow[];
   createdAt: string;
   updatedAt: string;

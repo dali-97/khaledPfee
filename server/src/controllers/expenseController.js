@@ -42,12 +42,32 @@ function serializeReport(report, rows = []) {
     phrManager: report.phr_manager || "",
     phrInitials: report.phr_initials || "",
     phrSignature: report.phr_signature || "Pending",
+    managerComment: report.manager_comment || "",
     status: report.status,
+    // Account name of whoever submitted it (from the JOIN below, when present).
+    submittedBy: report.submitter_first
+      ? `${report.submitter_first} ${report.submitter_last}`.trim()
+      : "",
+    submittedByEmail: report.submitter_email || "",
+    missionReference: report.mission_reference || "",
     rows: rows.map(serializeRow),
     createdAt: report.created_at,
     updatedAt: report.updated_at,
   };
 }
+
+const JOIN = `
+  SELECT er.*,
+         u.first_name AS submitter_first,
+         u.last_name  AS submitter_last,
+         u.email      AS submitter_email,
+         u.manager_id AS submitter_manager_id,
+         m.reference  AS mission_reference,
+         m.employee_id AS mission_employee_id
+  FROM expense_reports er
+  LEFT JOIN users u    ON er.created_by = u.id
+  LEFT JOIN missions m ON er.mission_id = m.id
+`;
 
 // ─── GET /api/expense-reports ─────────────────────────────────────────────────
 
@@ -58,21 +78,21 @@ export async function listReports(req, res, next) {
 
     let rows;
     if (role === "admin") {
-      [rows] = await db.execute(
-        "SELECT * FROM expense_reports ORDER BY created_at DESC",
-      );
+      [rows] = await db.execute(`${JOIN} ORDER BY er.created_at DESC`);
     } else if (role === "manager") {
+      // Own reports plus everything submitted by a direct report.
       [rows] = await db.execute(
-        "SELECT * FROM expense_reports WHERE created_by = ? ORDER BY created_at DESC",
-        [userId],
+        `${JOIN} WHERE er.created_by = ? OR u.manager_id = ?
+         ORDER BY er.created_at DESC`,
+        [userId, userId],
       );
     } else {
+      // Employees see reports they submitted themselves, plus any report
+      // attached to one of their missions.
       [rows] = await db.execute(
-        `SELECT er.* FROM expense_reports er
-         JOIN missions m ON er.mission_id = m.id
-         WHERE m.employee_id = ?
+        `${JOIN} WHERE er.created_by = ? OR m.employee_id = ?
          ORDER BY er.created_at DESC`,
-        [userId],
+        [userId, userId],
       );
     }
 
@@ -101,7 +121,9 @@ export async function createReport(req, res, next) {
 
     const {
       missionRef,
+      // The client form field is named "nom"; accept either.
       employeeName,
+      nom,
       department,
       matricule,
       periode,
@@ -141,7 +163,7 @@ export async function createReport(req, res, next) {
       [
         missionId,
         userId,
-        employeeName || "",
+        employeeName || nom || "",
         department || "",
         matricule || "",
         periode || "",
@@ -182,26 +204,114 @@ export async function createReport(req, res, next) {
       );
     }
 
-    const [[report]] = await db.execute(
-      "SELECT * FROM expense_reports WHERE id = ?",
-      [reportId],
-    );
+    const [[report]] = await db.execute(`${JOIN} WHERE er.id = ?`, [reportId]);
     const [expRows] = await db.execute(
       "SELECT * FROM expense_rows WHERE report_id = ? ORDER BY row_order",
       [reportId],
     );
     const serialized = serializeReport(report, expRows);
 
-    // SSE: notify all admins
-    sseManager.sendToRole("admin", "expense_report:created", {
+    // SSE: notify admins and the submitter's own manager (same as missions)
+    const submitter = `${req.user.first_name} ${req.user.last_name}`.trim();
+    const payload = {
       report: serialized,
-      message: `New expense report submitted${missionId ? ` for mission ${missionRef}` : ""}.`,
+      createdBy: {
+        id: userId,
+        name: employeeName || nom || submitter,
+        role: req.user.role,
+      },
+      message: `New expense report submitted by ${submitter}${
+        missionId ? ` for mission ${missionRef}` : ""
+      }.`,
       timestamp: new Date().toISOString(),
-    });
+    };
+    sseManager.sendToRole("admin", "expense_report:created", payload);
+    if (req.user.manager_id) {
+      sseManager.sendToUser(req.user.manager_id, "expense_report:created", payload);
+    }
 
     return res
       .status(201)
       .json({ message: "Expense report created.", report: serialized });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ─── PATCH /api/expense-reports/:id/status ───────────────────────────────────
+
+/**
+ * Approve or reject a submitted expense report.
+ * Mirrors missionController.updateStatus: admins can act on any report,
+ * managers only on reports submitted by their own direct reports.
+ */
+export async function updateReportStatus(req, res, next) {
+  try {
+    const db = getDb();
+    const { id: actorId, role: actorRole } = req.user;
+    const { id } = req.params;
+    const { status, managerComment } = req.body;
+
+    const valid = ["approved", "rejected"];
+    if (!valid.includes(status)) {
+      return res
+        .status(400)
+        .json({ message: "Status must be 'approved' or 'rejected'." });
+    }
+
+    const [[report]] = await db.execute(`${JOIN} WHERE er.id = ? LIMIT 1`, [id]);
+    if (!report) return res.status(404).json({ message: "Report not found." });
+
+    if (
+      actorRole !== "admin" &&
+      Number(report.submitter_manager_id) !== actorId
+    ) {
+      return res.status(403).json({ message: "Forbidden." });
+    }
+
+    // The paper form tracks the decision through the PHR signature field.
+    const signature = status === "approved" ? "Validated" : "Returned for update";
+
+    await db.execute(
+      `UPDATE expense_reports
+          SET status = ?, phr_signature = ?,
+              manager_comment = COALESCE(?, manager_comment),
+              updated_at = NOW()
+        WHERE id = ?`,
+      [status, signature, managerComment ?? null, id],
+    );
+
+    const [[updated]] = await db.execute(`${JOIN} WHERE er.id = ?`, [id]);
+    const [expRows] = await db.execute(
+      "SELECT * FROM expense_rows WHERE report_id = ? ORDER BY row_order",
+      [id],
+    );
+    const serialized = serializeReport(updated, expRows);
+
+    // Notify the employee who submitted it.
+    sseManager.sendToUser(report.created_by, "expense_report:status_changed", {
+      report: serialized,
+      status,
+      managerComment: managerComment || "",
+      message: `Your expense report${report.periode ? ` for ${report.periode}` : ""} has been ${status}.`,
+      timestamp: new Date().toISOString(),
+    });
+
+    // If an admin acted, keep the submitter's manager in the loop too.
+    if (actorRole === "admin" && report.submitter_manager_id) {
+      sseManager.sendToUser(
+        report.submitter_manager_id,
+        "expense_report:status_changed",
+        {
+          report: serialized,
+          status,
+          message: `Expense report from ${report.submitter_first ?? ""} ${report.submitter_last ?? ""}`.trim() + ` was ${status} by admin.`,
+          timestamp: new Date().toISOString(),
+        },
+      );
+    }
+
+    return res.json({ message: `Report ${status}.`, report: serialized });
   } catch (err) {
     next(err);
   }
@@ -213,12 +323,24 @@ export async function getReport(req, res, next) {
   try {
     const db = getDb();
     const { id } = req.params;
+    const { id: userId, role } = req.user;
 
-    const [[report]] = await db.execute(
-      "SELECT * FROM expense_reports WHERE id = ? LIMIT 1",
-      [id],
-    );
+    const [[report]] = await db.execute(`${JOIN} WHERE er.id = ? LIMIT 1`, [id]);
     if (!report) return res.status(404).json({ message: "Report not found." });
+
+    // Same visibility rules as listReports.
+    const isOwner = Number(report.created_by) === userId;
+    const isOwnMission = Number(report.mission_employee_id) === userId;
+    const managesSubmitter = Number(report.submitter_manager_id) === userId;
+    const allowed =
+      role === "admin" ||
+      isOwner ||
+      (role === "manager" && managesSubmitter) ||
+      (role === "employee" && isOwnMission);
+
+    if (!allowed) {
+      return res.status(403).json({ message: "Forbidden." });
+    }
 
     const [rows] = await db.execute(
       "SELECT * FROM expense_rows WHERE report_id = ? ORDER BY row_order",
@@ -250,7 +372,7 @@ export async function updateReport(req, res, next) {
     }
 
     const {
-      employeeName, department, matricule, periode,
+      employeeName, nom, department, matricule, periode,
       dateFrom, dateTo, hrComments, totalCost,
       preparedBy, initials, phrManager, phrInitials, phrSignature,
       rows,
@@ -274,7 +396,7 @@ export async function updateReport(req, res, next) {
          updated_at     = NOW()
        WHERE id = ?`,
       [
-        employeeName, department, matricule, periode,
+        employeeName ?? nom ?? null, department, matricule, periode,
         dateFrom || null, dateTo || null, hrComments, totalCost,
         preparedBy, initials, phrManager, phrInitials, phrSignature,
         id,
@@ -298,10 +420,7 @@ export async function updateReport(req, res, next) {
       }
     }
 
-    const [[updated]] = await db.execute(
-      "SELECT * FROM expense_reports WHERE id = ?",
-      [id],
-    );
+    const [[updated]] = await db.execute(`${JOIN} WHERE er.id = ?`, [id]);
     const [expRows] = await db.execute(
       "SELECT * FROM expense_rows WHERE report_id = ? ORDER BY row_order",
       [id],

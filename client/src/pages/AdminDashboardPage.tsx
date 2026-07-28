@@ -19,6 +19,7 @@ import {
   StatusBadge,
   StatusRow,
 } from "@/components/mission-flow/primitives";
+import { ExpenseReportsCard } from "@/components/mission-flow/ExpenseReportsCard";
 import { activityFeed } from "@/data/mission-flow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -249,6 +250,8 @@ export function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      <ExpenseReportsCard />
     </div>
   );
 }

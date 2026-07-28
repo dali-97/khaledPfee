@@ -1,0 +1,152 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - generic [ref=f5e11]:
+          - paragraph [ref=f5e12]: Mission Flow
+          - paragraph [ref=f5e13]: employee workspace
+        - button [ref=f5e14] [cursor=pointer]
+      - generic [ref=f5e18]:
+        - button "Dashboard" [ref=f5e19] [cursor=pointer]
+        - button "Mission Forms" [ref=f5e25] [cursor=pointer]
+        - button "Mission History" [ref=f5e29] [cursor=pointer]
+        - button "Profile & Settings" [ref=f5e32] [cursor=pointer]
+      - generic [ref=f5e37]:
+        - generic [ref=f5e38]: Mission health
+        - heading "Policy compliance stays visible." [level=3] [ref=f5e39]
+        - paragraph [ref=f5e40]: Travel budgets, approvals, and attachments remain organized across the full mission cycle.
+      - button "Back to landing page" [ref=f5e41] [cursor=pointer]
+    - generic [ref=f5e47]:
+      - banner [ref=f5e48]:
+        - generic [ref=f5e49]:
+          - generic [ref=f5e50]:
+            - button [ref=f5e51] [cursor=pointer]
+            - generic [ref=f5e53]:
+              - generic [ref=f5e54]:
+                - generic [ref=f5e55]: Mission Flow
+                - generic [ref=f5e58]: Employee
+              - heading "Mission Forms" [level=1] [ref=f5e59]
+          - generic [ref=f5e60]:
+            - textbox "Search missions, employees, destinations..." [ref=f5e62]
+            - button [ref=f5e63] [cursor=pointer]
+            - button "Notifications" [ref=f5e67] [cursor=pointer]
+            - button [ref=f5e72] [cursor=pointer]:
+              - generic [ref=f5e77]:
+                - paragraph [ref=f5e78]: undefined undefined
+                - paragraph [ref=f5e79]: employee
+      - main [ref=f5e80]:
+        - generic [ref=f5e81]:
+          - generic [ref=f5e82]:
+            - generic [ref=f5e83]:
+              - generic [ref=f5e84]:
+                - generic [ref=f5e85]: Dashboard
+                - generic [ref=f5e88]: Mission Forms
+              - heading "Mission documents workflow" [level=2] [ref=f5e89]
+              - paragraph [ref=f5e90]: The first form is based on the employee mission order document, and the second form follows the HR and PHR mission expense sheet.
+            - generic [ref=f5e91]: Employee + HR / PHR
+          - generic [ref=f5e92]:
+            - generic [ref=f5e93]:
+              - button "Employee form" [ref=f5e94] [cursor=pointer]
+              - button "HR expense form" [active] [ref=f5e95] [cursor=pointer]
+            - generic [ref=f5e184]:
+              - generic [ref=f5e185]:
+                - generic [ref=f5e186]: Annexe 03
+                - heading "Frais de mission - Ressource humaine" [level=3] [ref=f5e187]
+                - paragraph [ref=f5e188]: This HR and PHR form follows the expense sheet template with employee identity, period, detailed mission rows, cost center, total amount, and verification fields.
+              - generic [ref=f5e190]:
+                - generic [ref=f5e191]:
+                  - generic [ref=f5e192]:
+                    - generic [ref=f5e193]: Nom
+                    - textbox "Nom" [ref=f5e194]:
+                      - /placeholder: Khaled Ben Salah
+                  - generic [ref=f5e195]:
+                    - generic [ref=f5e196]: Departement
+                    - textbox "Departement" [ref=f5e197]:
+                      - /placeholder: Operations
+                  - generic [ref=f5e198]:
+                    - generic [ref=f5e199]: Matricule
+                    - textbox "Matricule" [ref=f5e200]:
+                      - /placeholder: EMP-0148
+                  - generic [ref=f5e201]:
+                    - generic [ref=f5e202]: Periode
+                    - textbox "Periode" [ref=f5e203]:
+                      - /placeholder: April 2026
+                - generic [ref=f5e204]:
+                  - generic [ref=f5e205]:
+                    - generic [ref=f5e206]: Date - Du
+                    - textbox "Date - Du" [ref=f5e207]
+                  - generic [ref=f5e208]:
+                    - generic [ref=f5e209]: Date - Au
+                    - textbox "Date - Au" [ref=f5e210]
+                - generic [ref=f5e211]:
+                  - generic [ref=f5e212]:
+                    - generic [ref=f5e213]:
+                      - heading "Mission detailed rows" [level=3] [ref=f5e214]
+                      - paragraph [ref=f5e215]: Ref, date, mission detail, times, plage horaire, cost center, and mission expense.
+                    - button "Add row" [ref=f5e216] [cursor=pointer]
+                  - generic [ref=f5e219]:
+                    - generic [ref=f5e220]:
+                      - generic [ref=f5e221]: Ref
+                      - textbox "Ref" [ref=f5e222]: "1"
+                    - generic [ref=f5e223]:
+                      - generic [ref=f5e224]: Date
+                      - textbox "Date" [ref=f5e225]
+                    - generic [ref=f5e226]:
+                      - generic [ref=f5e227]: Mission detaillee
+                      - textbox "Mission detaillee" [ref=f5e228]:
+                        - /placeholder: Client meeting / site visit
+                    - generic [ref=f5e229]:
+                      - generic [ref=f5e230]: Heure depart
+                      - textbox "Heure depart" [ref=f5e231]
+                    - generic [ref=f5e232]:
+                      - generic [ref=f5e233]: Heure retour
+                      - textbox "Heure retour" [ref=f5e234]
+                    - generic [ref=f5e235]:
+                      - generic [ref=f5e236]: Plage horaire
+                      - textbox "Plage horaire" [ref=f5e237]:
+                        - /placeholder: 08:00-16:00
+                    - generic [ref=f5e238]:
+                      - generic [ref=f5e239]: Cost center
+                      - textbox "Cost center" [ref=f5e240]:
+                        - /placeholder: OPS-004
+                    - generic [ref=f5e241]:
+                      - generic [ref=f5e242]: Frais mission
+                      - spinbutton "Frais mission" [ref=f5e243]
+                    - generic [ref=f5e244]:
+                      - button [disabled]
+                - generic [ref=f5e245]:
+                  - generic [ref=f5e246]:
+                    - generic [ref=f5e247]: Commentaires RH / PHR
+                    - textbox "Commentaires RH / PHR" [ref=f5e248]:
+                      - /placeholder: Add HR notes, verification remarks, reimbursement comments, or missing-document observations.
+                  - generic [ref=f5e249]:
+                    - heading "Summary" [level=3] [ref=f5e251]
+                    - generic [ref=f5e252]:
+                      - generic [ref=f5e253]:
+                        - generic [ref=f5e254]: Total frais mission
+                        - spinbutton "Total frais mission" [ref=f5e255]: "0"
+                      - generic [ref=f5e256]:
+                        - generic [ref=f5e257]: Prepare par
+                        - textbox "Prepare par" [ref=f5e258]:
+                          - /placeholder: HR officer name
+                      - generic [ref=f5e259]:
+                        - generic [ref=f5e260]: Initiales
+                        - textbox "Initiales" [ref=f5e261]:
+                          - /placeholder: KB
+                - generic [ref=f5e262]:
+                  - generic [ref=f5e263]:
+                    - generic [ref=f5e264]: Verification PHR Manager
+                    - textbox "Verification PHR Manager" [ref=f5e265]:
+                      - /placeholder: PHR manager
+                  - generic [ref=f5e266]:
+                    - generic [ref=f5e267]: Initiales
+                    - textbox "Initiales" [ref=f5e268]:
+                      - /placeholder: NT
+                  - generic [ref=f5e269]:
+                    - generic [ref=f5e270]: Signature / validation
+                    - combobox "Signature / validation" [ref=f5e271]:
+                      - option "Pending" [selected]
+                      - option "Validated"
+                      - option "Returned for update"
+                - button "Submit HR Form" [ref=f5e273] [cursor=pointer]
+  - region "Notifications Alt+T"

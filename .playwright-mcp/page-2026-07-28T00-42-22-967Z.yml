@@ -1,0 +1,39 @@
+- generic [ref=f3e2]:
+  - generic [ref=f3e218]:
+    - generic [ref=f3e219]:
+      - generic [ref=f3e220]:
+        - button "Back" [ref=f3e221] [cursor=pointer]
+        - button [ref=f3e224] [cursor=pointer]
+      - generic [ref=f3e227]:
+        - generic [ref=f3e228]: Mission Flow workspace
+        - generic [ref=f3e229]:
+          - heading "Welcome back" [level=1] [ref=f3e230]
+          - paragraph [ref=f3e231]: Monitor missions, approvals, and travel budgets with one polished workspace.
+        - generic [ref=f3e232]:
+          - paragraph [ref=f3e237]: Submit and track travel missions from any device.
+          - paragraph [ref=f3e242]: Review approvals with comments, budgets, and files in one place.
+          - paragraph [ref=f3e247]: Keep admins aligned through analytics, exports, and archive controls.
+      - generic [ref=f3e248]:
+        - paragraph [ref=f3e249]: Preview roles
+        - generic [ref=f3e250]:
+          - button "Employee" [ref=f3e251] [cursor=pointer]
+          - button "Manager" [ref=f3e252] [cursor=pointer]
+          - button "Admin" [ref=f3e253] [cursor=pointer]
+    - generic [ref=f3e255]:
+      - generic [ref=f3e256]:
+        - generic [ref=f3e257]: Login
+        - heading "Access your dashboard" [level=3] [ref=f3e258]
+        - paragraph [ref=f3e259]: Accounts are provisioned by your admin or manager — contact them if you need access.
+      - generic [ref=f3e261]:
+        - generic [ref=f3e262]:
+          - generic [ref=f3e263]: Email address
+          - textbox "Email address" [ref=f3e264]:
+            - /placeholder: Enter your email
+        - generic [ref=f3e265]:
+          - generic [ref=f3e266]: Password
+          - generic [ref=f3e267]:
+            - textbox "Password Show" [ref=f3e268]:
+              - /placeholder: Enter your password
+            - button "Show" [ref=f3e269] [cursor=pointer]
+        - button "Sign in to Mission Flow" [ref=f3e270] [cursor=pointer]
+  - region "Notifications Alt+T"

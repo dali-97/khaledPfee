@@ -14,7 +14,8 @@ const router = Router();
  *   connected            – initial handshake
  *   mission:created      – new mission submitted (admins + managers)
  *   mission:status_changed – mission approved/rejected (owner + managers)
- *   expense_report:created – new HR expense report (admins)
+ *   expense_report:created – new HR expense report (admins + submitter's manager)
+ *   expense_report:status_changed – report approved/rejected (submitter + manager)
  *   : heartbeat          – keep-alive comment every 25 s
  */
 router.get("/", protect, (req, res) => {
